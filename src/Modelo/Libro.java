@@ -23,7 +23,7 @@ public class Libro {
 
     public Libro(String titulo, String autor, String editorial, String isbn,
             int anioPublicacion, int numeroPaginas, ArrayList<String> generos,
-            boolean disponible, double precio) {
+            boolean disponible) {
         this.titulo = titulo;
         this.autor = autor;
         this.editorial = editorial;
