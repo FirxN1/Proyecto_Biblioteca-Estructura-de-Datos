@@ -4,6 +4,8 @@
  */
 package Vista;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author JUAN
@@ -78,15 +80,15 @@ public class Login extends javax.swing.JFrame {
                             .addComponent(lblUsuario)
                             .addComponent(lblContraseña))
                         .addGap(46, 46, 46)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtContrasena, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                            .addComponent(txtUsuario)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(218, 218, 218)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnIngresar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(170, Short.MAX_VALUE))
+                .addContainerGap(138, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -117,6 +119,7 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsuarioActionPerformed
 
+       
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
         // TODO add your handling code here:
         String[] usuarios = {"carmen", "abel", "juan", "cristian"};
@@ -135,9 +138,20 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnIngresarActionPerformed
 
         if (accesoconcedido) {
-        System.out.println("Ingreso correcto para: " + usuarioIngresado);
+        JOptionPane.showMessageDialog(this,
+                "¡Bienvenido " + usuarioIngresado + "!",
+                "Acceso Concedido",
+                JOptionPane.INFORMATION_MESSAGE);
+
+        VistaEmpleado ventana = new VistaEmpleado();
+        ventana.setVisible(true);
+
+        this.dispose();
     } else {
-        System.out.println("Usuario o contraseña incorrectos");
+        JOptionPane.showMessageDialog(this,
+                "Usuario o contraseña incorrectos",
+                "Acceso Denegado",
+                JOptionPane.ERROR_MESSAGE);
     }
 }
     /**
