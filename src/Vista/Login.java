@@ -1,14 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Vista;
 
-/**
- *
- * @author JUAN
- */
-public class Login extends javax.swing.JFrame {
+import Roles.Empleado;
+
+
+
+
+
+public class Login extends javax.swing.JFrame { 
 
     /**
      * Creates new form Login
@@ -59,6 +57,11 @@ public class Login extends javax.swing.JFrame {
         });
 
         btnSalir.setText("SALIR");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -118,28 +121,44 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_txtUsuarioActionPerformed
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        // TODO add your handling code here:
-        String[] usuarios = {"carmen", "abel", "juan", "cristian"};
-        String[] contraseñas = {"carmen19", "abel12", "juan34", "cristian56"};
-        
-        String usuarioIngresado = txtUsuario.getText();
-        String contraseñaIngresada = new String(txtContrasena.getPassword());
-        
-        boolean accesoconcedido = false;
-        
-        for (int i=0; i < usuarios.length; i++) {
-            if (usuarioIngresado.equals(usuarios[i]) && contraseñaIngresada.equals(contraseñas[i])){
-                accesoconcedido = true;
-                break;
-            }
-    }//GEN-LAST:event_btnIngresarActionPerformed
+    // Array de empleados registrados
+    Empleado[] empleados = {
+        new Empleado("carmen", "carmen19"),
+        new Empleado("abel", "abel12"),
+        new Empleado("juan", "juan34"),
+        new Empleado("cristian", "cristian56")
+    };
 
-        if (accesoconcedido) {
-        System.out.println("Ingreso correcto para: " + usuarioIngresado);
-    } else {
-        System.out.println("Usuario o contraseña incorrectos");
+    String usuarioIngresado = txtUsuario.getText();
+    String contrasenaIngresada = new String(txtContrasena.getPassword());
+
+    boolean accesoConcedido = false;
+
+    for (Empleado emp : empleados) {
+        if (emp.validarLogin(usuarioIngresado, contrasenaIngresada)) {
+            accesoConcedido = true;
+            break;
+        }
     }
-}
+
+    if (accesoConcedido) {
+        javax.swing.JOptionPane.showMessageDialog(this, 
+            "✅ Ingreso correcto para: " + usuarioIngresado);
+        // Aquí puedes abrir la ventana principal de la biblioteca
+    } else {
+        javax.swing.JOptionPane.showMessageDialog(this, 
+            "❌ Usuario o contraseña incorrectos");
+    }
+              
+    }//GEN-LAST:event_btnIngresarActionPerformed
+    
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+ dispose();
+    }//GEN-LAST:event_btnSalirActionPerformed
+
+       
+
     /**
      * @param args the command line arguments
      */
@@ -186,3 +205,4 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }
+
