@@ -4,37 +4,45 @@
  */
 package Modelo;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Abel Rodrigo
  */
 public class Libro {
+
     private String titulo;
     private String autor;
     private String editorial;
     private String isbn;
     private int añoPublicacion;
     private int numeroPaginas;
-    private String genero;
+    private ArrayList<String> generos;
     private boolean disponible;
     private double precio;
 
-    public Libro(String titulo, String autor, String editorial, String isbn, 
-                 int anioPublicacion, int numeroPaginas, String genero, 
-                 boolean disponible, double precio) {
+    public Libro(String titulo, String autor, String editorial, String isbn,
+            int anioPublicacion, int numeroPaginas, ArrayList<String> generos,
+            boolean disponible, double precio) {
         this.titulo = titulo;
         this.autor = autor;
         this.editorial = editorial;
         this.isbn = isbn;
         this.añoPublicacion = anioPublicacion;
         this.numeroPaginas = numeroPaginas;
-        this.genero = genero;
+        this.generos = generos;
         this.disponible = disponible;
         this.precio = precio;
     }
 
-    public String getTitulo() { return titulo; }
-    public void setTitulo(String titulo) { this.titulo = titulo; }
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
 
     public String getAutor() {
         return autor;
@@ -76,12 +84,12 @@ public class Libro {
         this.numeroPaginas = numeroPaginas;
     }
 
-    public String getGenero() {
-        return genero;
+    public ArrayList<String> getGeneros() {
+        return generos;
     }
 
-    public void setGenero(String genero) {
-        this.genero = genero;
+    public void addGenero(String genero) {
+        generos.add(genero);
     }
 
     public boolean isDisponible() {
@@ -99,7 +107,5 @@ public class Libro {
     public void setPrecio(double precio) {
         this.precio = precio;
     }
-    
-    
-}
 
+}
