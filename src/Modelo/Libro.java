@@ -20,7 +20,6 @@ public class Libro {
     private int numeroPaginas;
     private ArrayList<String> generos;
     private boolean disponible;
-    private double precio;
 
     public Libro(String titulo, String autor, String editorial, String isbn,
             int anioPublicacion, int numeroPaginas, ArrayList<String> generos,
@@ -98,14 +97,6 @@ public class Libro {
 
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
-    }
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
     }
 
 }
