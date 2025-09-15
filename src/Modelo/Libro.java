@@ -32,7 +32,6 @@ public class Libro {
         this.numeroPaginas = numeroPaginas;
         this.generos = generos;
         this.disponible = disponible;
-        this.precio = precio;
     }
 
     public String getTitulo() {
