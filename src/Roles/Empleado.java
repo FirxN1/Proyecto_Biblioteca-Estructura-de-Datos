@@ -3,6 +3,7 @@ package Roles;
 
 
 public class Empleado {
-    private double nombre;
+    private String nombre;
+    private String contraseña;
     
 }
