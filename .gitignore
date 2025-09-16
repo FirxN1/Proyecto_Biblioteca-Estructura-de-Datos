@@ -1,1 +1,17 @@
 /nbproject/private/
+/build/
+/build/
+ /dist/
+ /nbbuild/
+ /nbdist/
+ /dist/
+
+nbproject/private/
+nbproject/configs/
+nbproject/private.properties
+
+.DS_Store
+Thumbs.db
+
+*.log
+
