@@ -71,10 +71,10 @@ public class Biblioteca {
         return null;
     }
 
-    public ArrayList<Libro> buscarPorAnio(int anio) {
+    public ArrayList<Libro> buscarPorAño(int año) {
         ArrayList<Libro> resultado = new ArrayList<>();
         for (Libro l : libros) {
-            if (l.getAñoPublicacion() == anio) {
+            if (l.getAñoPublicacion() == año) {
                 resultado.add(l);
             }
         }
