@@ -109,7 +109,6 @@ public class Biblioteca {
         return resultado;
     }
 
-    // --- Métodos prestar y devolver ---
     public boolean prestarLibro(String isbn) {
         Libro l = buscarPorISBN(isbn);
         if (l != null && l.isDisponible()) {
