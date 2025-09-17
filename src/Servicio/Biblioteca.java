@@ -2,8 +2,10 @@ package Servicio;
 
 import java.util.ArrayList;
 import Modelo.Libro;
+import javax.swing.table.DefaultTableModel;
 
 public class Biblioteca {
+
     private ArrayList<Libro> libros;
 
     private static Biblioteca instancia;
@@ -127,10 +129,9 @@ public class Biblioteca {
         return false;
     }
 
-    // --- Editar libro ---
     public boolean editarLibro(String isbn, String nuevoTitulo, String nuevoAutor,
-                               String nuevaEditorial, int nuevoAnio, int nuevasPaginas,
-                               ArrayList<String> nuevosGeneros, boolean disponible) {
+            String nuevaEditorial, int nuevoAnio, int nuevasPaginas,
+            ArrayList<String> nuevosGeneros, boolean disponible) {
         Libro l = buscarPorISBN(isbn);
         if (l != null) {
             l.setTitulo(nuevoTitulo);
@@ -146,21 +147,43 @@ public class Biblioteca {
         return false;
     }
 
-    // --- Listar libros ---
     public void listarLibros() {
         if (libros.isEmpty()) {
             System.out.println("No hay libros en la biblioteca.");
         } else {
             for (Libro l : libros) {
-                System.out.println("Título: " + l.getTitulo() +
-                        ", Autor: " + l.getAutor() +
-                        ", Editorial: " + l.getEditorial() +
-                        ", ISBN: " + l.getIsbn() +
-                        ", Año: " + l.getAñoPublicacion() +
-                        ", Páginas: " + l.getNumeroPaginas() +
-                        ", Géneros: " + l.getGeneros() +
-                        ", Disponible: " + (l.isDisponible() ? "Sí" : "No"));
+                System.out.println("Título: " + l.getTitulo()
+                        + ", Autor: " + l.getAutor()
+                        + ", Editorial: " + l.getEditorial()
+                        + ", ISBN: " + l.getIsbn()
+                        + ", Año: " + l.getAñoPublicacion()
+                        + ", Páginas: " + l.getNumeroPaginas()
+                        + ", Géneros: " + l.getGeneros()
+                        + ", Disponible: " + (l.isDisponible() ? "Sí" : "No"));
             }
         }
     }
+
+    public DefaultTableModel listarLibrosTableModel() {
+        String[] columnas = {"Título", "Autor", "Editorial", "ISBN", "Año", "Páginas", "Géneros", "Disponible"};
+        DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
+
+        if (!libros.isEmpty()) {
+            for (Libro l : libros) {
+                Object[] fila = {
+                    l.getTitulo(),
+                    l.getAutor(),
+                    l.getEditorial(),
+                    l.getIsbn(),
+                    l.getAñoPublicacion(),
+                    l.getNumeroPaginas(),
+                    String.join(", ", l.getGeneros()),
+                    l.isDisponible() ? "Sí" : "No"
+                };
+                modelo.addRow(fila);
+            }
+        }
+        return modelo;
+    }
+
 }
