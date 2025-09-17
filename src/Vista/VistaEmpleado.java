@@ -4,11 +4,21 @@
  */
 package Vista;
 
+import Modelo.Libro;
+import Servicio.Biblioteca;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author JUAN
  */
 public class VistaEmpleado extends javax.swing.JFrame {
+
+    Biblioteca biblioteca = Biblioteca.getInstancia();
+    DefaultTableModel modeloTabla = new DefaultTableModel(
+            new Object[]{"Título", "Autor", "Editorial", "ISBN", "Año", "Páginas", "Géneros", "Disponible"}, 0
+    );
 
     /**
      * Creates new form VistaEmpleado
@@ -81,25 +91,13 @@ public class VistaEmpleado extends javax.swing.JFrame {
 
         jSeparator1.setPreferredSize(new java.awt.Dimension(50, 5));
         Menu.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 120, 20));
-
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/libro.png"))); // NOI18N
         Menu.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 128, 128));
 
         getContentPane().add(Menu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 160, 640));
 
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        tabla_libros.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        tabla_libros.setModel(modeloTabla);
         jScrollPane1.setViewportView(tabla_libros);
 
         jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 810, 410));
@@ -116,6 +114,11 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jPanel2.add(txt_buscar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 580, 30));
 
         btn_buscar_libro.setText("Buscar");
+        btn_buscar_libro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_buscar_libroActionPerformed(evt);
+            }
+        });
         jPanel2.add(btn_buscar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 70, 130, 30));
 
         btn_agregar_libro.setText("Agregar...");
@@ -226,6 +229,32 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void btn_buscar_libroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscar_libroActionPerformed
+        // TODO add your handling code here:
+
+        String titulo = txt_buscar_libro.getText().trim();
+
+        // Call your Singleton Biblioteca
+        Libro encontrado = biblioteca.buscarPorTitulo(titulo);
+
+        // Get the table model and clear it
+        DefaultTableModel modelo = (DefaultTableModel) tabla_libros.getModel();
+        modelo.setRowCount(0);
+
+            modelo.addRow(new Object[]{
+                encontrado.getTitulo(),
+                encontrado.getAutor(),
+                encontrado.getEditorial(),
+                encontrado.getIsbn(),
+                encontrado.getAñoPublicacion(),
+                encontrado.getNumeroPaginas(),
+                encontrado.getGeneros(),
+                encontrado.isDisponible() ? "Sí" : "No"
+            });
+        
+        biblioteca.buscarPorTitulo(txt_buscar_libro.getText());
+    }//GEN-LAST:event_btn_buscar_libroActionPerformed
 
     /**
      * @param args the command line arguments

@@ -10,8 +10,63 @@ public class Biblioteca {
 
     private static Biblioteca instancia;
 
-    private Biblioteca() {
+    public Biblioteca() {
         this.libros = new ArrayList<>();
+
+        ArrayList<String> generos1 = new ArrayList<>();
+        generos1.add("Fantasía");
+        generos1.add("Aventura");
+        libros.add(new Libro("Harry Potter y la piedra filosofal", "J.K. Rowling", "Salamandra",
+                "9788478884452", 1997, 223, generos1, true));
+
+        ArrayList<String> generos2 = new ArrayList<>();
+        generos2.add("Ciencia Ficción");
+        libros.add(new Libro("Dune", "Frank Herbert", "Chilton Books",
+                "9780441013593", 1965, 412, generos2, true));
+
+        ArrayList<String> generos3 = new ArrayList<>();
+        generos3.add("Realismo Mágico");
+        libros.add(new Libro("Cien años de soledad", "Gabriel García Márquez", "Sudamericana",
+                "9780307474728", 1967, 471, generos3, false));
+
+        ArrayList<String> generos4 = new ArrayList<>();
+        generos4.add("Novela");
+        libros.add(new Libro("Don Quijote de la Mancha", "Miguel de Cervantes", "Francisco de Robles",
+                "9788491050295", 1605, 863, generos4, true));
+
+        ArrayList<String> generos5 = new ArrayList<>();
+        generos5.add("Drama");
+        generos5.add("Romance");
+        libros.add(new Libro("Romeo y Julieta", "William Shakespeare", "Penguin Classics",
+                "9780141396477", 1597, 230, generos5, true));
+
+        ArrayList<String> generos6 = new ArrayList<>();
+        generos6.add("Terror");
+        libros.add(new Libro("It", "Stephen King", "Viking",
+                "9780450411434", 1986, 1138, generos6, false));
+
+        ArrayList<String> generos7 = new ArrayList<>();
+        generos7.add("Ficción");
+        generos7.add("Política");
+        libros.add(new Libro("1984", "George Orwell", "Secker & Warburg",
+                "9780451524935", 1949, 328, generos7, true));
+
+        ArrayList<String> generos8 = new ArrayList<>();
+        generos8.add("Ciencia");
+        generos8.add("Divulgación");
+        libros.add(new Libro("Breve historia del tiempo", "Stephen Hawking", "Bantam Books",
+                "9780553380163", 1988, 212, generos8, true));
+
+        ArrayList<String> generos9 = new ArrayList<>();
+        generos9.add("Historia");
+        libros.add(new Libro("Sapiens: De animales a dioses", "Yuval Noah Harari", "Debate",
+                "9788499926226", 2011, 498, generos9, true));
+
+        ArrayList<String> generos10 = new ArrayList<>();
+        generos10.add("Fantasía");
+        generos10.add("Épica");
+        libros.add(new Libro("El Señor de los Anillos", "J.R.R. Tolkien", "Allen & Unwin",
+                "9780618640157", 1954, 1216, generos10, false));
     }
 
     public static Biblioteca getInstancia() {
@@ -34,8 +89,10 @@ public class Biblioteca {
     }
 
     public Libro buscarPorTitulo(String titulo) {
+        String criterio = titulo.toLowerCase();
+
         for (Libro l : libros) {
-            if (l.getTitulo().equalsIgnoreCase(titulo)) {
+            if (l.getTitulo().toLowerCase().contains(criterio)) {
                 return l;
             }
         }
