@@ -24,47 +24,57 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
+              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="224" max="-2" attributes="0"/>
-                      <Component id="lblBienvenido" min="-2" pref="77" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
+                      <Component id="lblIdentificate" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
-                      <Component id="lblIdentificate" min="-2" pref="70" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="165" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblUsuario" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblContraseña" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="txtContrasena" pref="103" max="32767" attributes="0"/>
-                          <Component id="txtUsuario" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="218" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="btnIngresar" max="32767" attributes="0"/>
-                          <Component id="btnSalir" min="-2" pref="85" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lblUsuario" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblContraseña" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="txtUsuario" pref="140" max="32767" attributes="0"/>
+                                  <Component id="txtContrasena" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="241" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="btnIngresar" max="32767" attributes="0"/>
+                                  <Component id="btnSalir" min="-2" pref="146" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace pref="71" max="32767" attributes="0"/>
+                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="138" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="247" max="-2" attributes="0"/>
+              <Component id="lblBienvenido" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="263" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-              <Component id="lblBienvenido" min="-2" pref="24" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+              <Component id="lblBienvenido" min="-2" pref="48" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
               <Component id="lblIdentificate" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="txtUsuario" min="-2" max="-2" attributes="0"/>
                   <Component id="lblUsuario" min="-2" max="-2" attributes="0"/>
@@ -74,19 +84,41 @@
                   <Component id="lblContraseña" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txtContrasena" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
               <Component id="btnIngresar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
-              <Component id="btnSalir" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="36" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="btnSalir" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace pref="31" max="32767" attributes="0"/>
+                      <Component id="jLabel1" min="-2" pref="170" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
+    <Container class="javax.swing.JPanel" name="jPanel1">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="false"/>
+      </Layout>
+    </Container>
     <Component class="javax.swing.JLabel" name="lblUsuario">
       <Properties>
-        <Property name="text" type="java.lang.String" value="USUARIO"/>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Rockwell" size="18" style="2"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="USUARIO:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtUsuario">
@@ -96,23 +128,41 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblBienvenido">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="48" style="1"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="4" green="47" red="89" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="BIENVENIDO"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblIdentificate">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="24" style="3"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="0" green="33" red="cc" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Identificate"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblContrase&#xf1;a">
       <Properties>
-        <Property name="text" type="java.lang.String" value="CONTRASE&#xd1;A"/>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Rockwell" size="18" style="2"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="CONTRASE&#xd1;A:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JPasswordField" name="txtContrasena">
     </Component>
     <Component class="javax.swing.JButton" name="btnIngresar">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="MS PGothic" size="24" style="1"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="INGRESAR"/>
       </Properties>
       <Events>
@@ -121,7 +171,17 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnSalir">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="MS PGothic" size="24" style="1"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="SALIR"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/biblioteca.jpeg"/>
+        </Property>
       </Properties>
     </Component>
   </SubComponents>
