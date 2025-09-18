@@ -130,7 +130,7 @@ public class Biblioteca {
         String criterio = isbn.toLowerCase();
 
         for (Libro l : libros) {
-            if (l.getIsbn().toLowerCase().contains(criterio)) {
+            if (l.getIsbn().equalsIgnoreCase(criterio)) {
                 resultado.add(l);
             }
         }
