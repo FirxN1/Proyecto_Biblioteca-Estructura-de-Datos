@@ -6,8 +6,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class Biblioteca {
 
-    private ArrayList<Libro> libros;
-
+    private final ArrayList<Libro> libros;
     private static Biblioteca instancia;
 
     public Biblioteca() {
@@ -88,21 +87,26 @@ public class Biblioteca {
         return libros;
     }
 
-    public Libro buscarPorTitulo(String titulo) {
+    // --------- Métodos de búsqueda modificados (devuelven listas) -----------
+
+    public ArrayList<Libro> buscarPorTitulo(String titulo) {
+        ArrayList<Libro> resultado = new ArrayList<>();
         String criterio = titulo.toLowerCase();
 
         for (Libro l : libros) {
             if (l.getTitulo().toLowerCase().contains(criterio)) {
-                return l;
+                resultado.add(l);
             }
         }
-        return null;
+        return resultado;
     }
 
     public ArrayList<Libro> buscarPorAutor(String autor) {
         ArrayList<Libro> resultado = new ArrayList<>();
+        String criterio = autor.toLowerCase();
+
         for (Libro l : libros) {
-            if (l.getAutor().equalsIgnoreCase(autor)) {
+            if (l.getAutor().toLowerCase().contains(criterio)) {
                 resultado.add(l);
             }
         }
@@ -111,21 +115,26 @@ public class Biblioteca {
 
     public ArrayList<Libro> buscarPorEditorial(String editorial) {
         ArrayList<Libro> resultado = new ArrayList<>();
+        String criterio = editorial.toLowerCase();
+
         for (Libro l : libros) {
-            if (l.getEditorial().equalsIgnoreCase(editorial)) {
+            if (l.getEditorial().toLowerCase().contains(criterio)) {
                 resultado.add(l);
             }
         }
         return resultado;
     }
 
-    public Libro buscarPorISBN(String isbn) {
+    public ArrayList<Libro> buscarPorISBN(String isbn) {
+        ArrayList<Libro> resultado = new ArrayList<>();
+        String criterio = isbn.toLowerCase();
+
         for (Libro l : libros) {
-            if (l.getIsbn().equalsIgnoreCase(isbn)) {
-                return l;
+            if (l.getIsbn().toLowerCase().contains(criterio)) {
+                resultado.add(l);
             }
         }
-        return null;
+        return resultado;
     }
 
     public ArrayList<Libro> buscarPorAño(int año) {
@@ -150,9 +159,14 @@ public class Biblioteca {
 
     public ArrayList<Libro> buscarPorGenero(String genero) {
         ArrayList<Libro> resultado = new ArrayList<>();
+        String criterio = genero.toLowerCase();
+
         for (Libro l : libros) {
-            if (l.getGeneros().contains(genero)) {
-                resultado.add(l);
+            for (String g : l.getGeneros()) {
+                if (g.toLowerCase().contains(criterio)) {
+                    resultado.add(l);
+                    break; // evita duplicados
+                }
             }
         }
         return resultado;
@@ -168,20 +182,24 @@ public class Biblioteca {
         return resultado;
     }
 
+    // ----------- Métodos de préstamo / devolución ------------
+
     public boolean prestarLibro(String isbn) {
-        Libro l = buscarPorISBN(isbn);
-        if (l != null && l.isDisponible()) {
-            l.setDisponible(false);
-            return true;
+        for (Libro l : libros) {
+            if (l.getIsbn().equalsIgnoreCase(isbn) && l.isDisponible()) {
+                l.setDisponible(false);
+                return true;
+            }
         }
         return false;
     }
 
     public boolean devolverLibro(String isbn) {
-        Libro l = buscarPorISBN(isbn);
-        if (l != null && !l.isDisponible()) {
-            l.setDisponible(true);
-            return true;
+        for (Libro l : libros) {
+            if (l.getIsbn().equalsIgnoreCase(isbn) && !l.isDisponible()) {
+                l.setDisponible(true);
+                return true;
+            }
         }
         return false;
     }
@@ -189,20 +207,23 @@ public class Biblioteca {
     public boolean editarLibro(String isbn, String nuevoTitulo, String nuevoAutor,
             String nuevaEditorial, int nuevoAnio, int nuevasPaginas,
             ArrayList<String> nuevosGeneros, boolean disponible) {
-        Libro l = buscarPorISBN(isbn);
-        if (l != null) {
-            l.setTitulo(nuevoTitulo);
-            l.setAutor(nuevoAutor);
-            l.setEditorial(nuevaEditorial);
-            l.setAnioPublicacion(nuevoAnio);
-            l.setNumeroPaginas(nuevasPaginas);
-            l.getGeneros().clear();
-            l.getGeneros().addAll(nuevosGeneros);
-            l.setDisponible(disponible);
-            return true;
+        for (Libro l : libros) {
+            if (l.getIsbn().equalsIgnoreCase(isbn)) {
+                l.setTitulo(nuevoTitulo);
+                l.setAutor(nuevoAutor);
+                l.setEditorial(nuevaEditorial);
+                l.setAnioPublicacion(nuevoAnio);
+                l.setNumeroPaginas(nuevasPaginas);
+                l.getGeneros().clear();
+                l.getGeneros().addAll(nuevosGeneros);
+                l.setDisponible(disponible);
+                return true;
+            }
         }
         return false;
     }
+
+    // ----------- Listar ------------
 
     public void listarLibros() {
         if (libros.isEmpty()) {
@@ -242,5 +263,4 @@ public class Biblioteca {
         }
         return modelo;
     }
-
 }
