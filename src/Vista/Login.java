@@ -166,7 +166,7 @@ public class Login extends javax.swing.JFrame {
                 accesoconcedido = true;
                 break;
             }
-    }//GEN-LAST:event_btnIngresarActionPerformed
+        }
 
         if (accesoconcedido) {
         JOptionPane.showMessageDialog(this,
@@ -184,7 +184,7 @@ public class Login extends javax.swing.JFrame {
                 "Acceso Denegado",
                 JOptionPane.ERROR_MESSAGE);
     }
-}
+}//GEN-LAST:event_btnIngresarActionPerformed
     /**
      * @param args the command line arguments
      */
