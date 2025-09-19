@@ -7,12 +7,14 @@ package Vista;
 import Modelo.Libro;
 import Servicio.Biblioteca;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author JUAN
  */
+
 public class VistaEmpleado extends javax.swing.JFrame {
 
     Biblioteca biblioteca = Biblioteca.getInstancia();
@@ -52,6 +54,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
         btn_agregar_libro = new javax.swing.JButton();
         btn_eliminar_libro = new javax.swing.JButton();
         btn_modificar_libro = new javax.swing.JButton();
+        cbxOpcion = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -69,9 +72,9 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jTextField6 = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblPrestamo = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        jlistPrestamo = new javax.swing.JList<>();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
@@ -111,7 +114,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
                 txt_buscar_libroActionPerformed(evt);
             }
         });
-        jPanel2.add(txt_buscar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 580, 30));
+        jPanel2.add(txt_buscar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 540, 30));
 
         btn_buscar_libro.setText("Buscar");
         btn_buscar_libro.addActionListener(new java.awt.event.ActionListener() {
@@ -119,7 +122,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
                 btn_buscar_libroActionPerformed(evt);
             }
         });
-        jPanel2.add(btn_buscar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 70, 130, 30));
+        jPanel2.add(btn_buscar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 70, 130, 30));
 
         btn_agregar_libro.setText("Agregar...");
         jPanel2.add(btn_agregar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 550, 120, 30));
@@ -129,6 +132,14 @@ public class VistaEmpleado extends javax.swing.JFrame {
 
         btn_modificar_libro.setText("Modificar...");
         jPanel2.add(btn_modificar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 550, 120, 30));
+
+        cbxOpcion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Título", "Autor", "Editorial", "Año", "ISBN", " " }));
+        cbxOpcion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxOpcionActionPerformed(evt);
+            }
+        });
+        jPanel2.add(cbxOpcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 70, 120, 30));
 
         jTabbedPane1.addTab("Libros", jPanel2);
 
@@ -181,7 +192,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jPanel6.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
         jPanel6.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, 200, 30));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblPrestamo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -192,16 +203,16 @@ public class VistaEmpleado extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(tblPrestamo);
 
         jPanel6.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 400, 190));
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        jlistPrestamo.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane3.setViewportView(jList1);
+        jScrollPane3.setViewportView(jlistPrestamo);
 
         jPanel6.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 30, 320, 180));
 
@@ -231,65 +242,102 @@ public class VistaEmpleado extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void btn_buscar_libroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscar_libroActionPerformed
-        // TODO add your handling code here:
+        String criterio = txt_buscar_libro.getText().trim();
+        String opcion = cbxOpcion.getSelectedItem().toString();
 
-        String titulo = txt_buscar_libro.getText().trim();
+        ArrayList<Libro> encontrados = new ArrayList<>();
 
-        // Call your Singleton Biblioteca
-        Libro encontrado = biblioteca.buscarPorTitulo(titulo);
+        switch (opcion) {
+            case "Título":
+                encontrados = biblioteca.buscarPorTitulo(criterio);
+                break;
+            case "Autor":
+                encontrados = biblioteca.buscarPorAutor(criterio);
+                break;
+            case "Editorial":
+                encontrados = biblioteca.buscarPorEditorial(criterio);
+                break;
+            case "Año":
+                try {
+                    int anio = Integer.parseInt(criterio);
+                    encontrados = biblioteca.buscarPorAño(anio);
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Ingrese un número válido para el año.");
+                    return;
+                }
+                break;
+            case "ISBN":
+                encontrados = biblioteca.buscarPorISBN(criterio);
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "Seleccione un criterio de búsqueda.");
+                return;
+        }
 
-        // Get the table model and clear it
         DefaultTableModel modelo = (DefaultTableModel) tabla_libros.getModel();
         modelo.setRowCount(0);
 
+        // Agregar resultados
+        for (Libro l : encontrados) {
             modelo.addRow(new Object[]{
-                encontrado.getTitulo(),
-                encontrado.getAutor(),
-                encontrado.getEditorial(),
-                encontrado.getIsbn(),
-                encontrado.getAñoPublicacion(),
-                encontrado.getNumeroPaginas(),
-                encontrado.getGeneros(),
-                encontrado.isDisponible() ? "Sí" : "No"
+                l.getTitulo(),
+                l.getAutor(),
+                l.getEditorial(),
+                l.getIsbn(),
+                l.getAñoPublicacion(),
+                l.getNumeroPaginas(),
+                String.join(", ", l.getGeneros()),
+                l.isDisponible() ? "Sí" : "No"
             });
-        
-        biblioteca.buscarPorTitulo(txt_buscar_libro.getText());
+        }
+
+        // Si no hay resultados
+        if (encontrados.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No se encontraron resultados para: " + criterio);
+        }
+    
+
+
     }//GEN-LAST:event_btn_buscar_libroActionPerformed
+
+    private void cbxOpcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxOpcionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxOpcionActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    /* Set the Nimbus look and feel */
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+     */
+    try {
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new VistaEmpleado().setVisible(true);
-            }
-        });
+    } catch (ClassNotFoundException ex) {
+        java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (InstantiationException ex) {
+        java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (IllegalAccessException ex) {
+        java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+    //</editor-fold>
+
+    /* Create and display the form */
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            new VistaEmpleado().setVisible(true);
+        }
+    });
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Menu;
@@ -297,6 +345,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private javax.swing.JButton btn_buscar_libro;
     private javax.swing.JButton btn_eliminar_libro;
     private javax.swing.JButton btn_modificar_libro;
+    private javax.swing.JComboBox<String> cbxOpcion;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -308,7 +357,6 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -320,17 +368,18 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
+    private javax.swing.JList<String> jlistPrestamo;
     private java.awt.Menu menu1;
     private java.awt.Menu menu2;
     private java.awt.MenuBar menuBar1;
     private javax.swing.JTable tabla_libros;
+    private javax.swing.JTable tblPrestamo;
     private javax.swing.JTextField txt_buscar_libro;
     // End of variables declaration//GEN-END:variables
 }
