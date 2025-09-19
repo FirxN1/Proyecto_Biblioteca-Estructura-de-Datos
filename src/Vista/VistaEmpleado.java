@@ -14,7 +14,6 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author JUAN
  */
-
 public class VistaEmpleado extends javax.swing.JFrame {
 
     Biblioteca biblioteca = Biblioteca.getInstancia();
@@ -22,11 +21,35 @@ public class VistaEmpleado extends javax.swing.JFrame {
             new Object[]{"Título", "Autor", "Editorial", "ISBN", "Año", "Páginas", "Géneros", "Disponible"}, 0
     );
 
-    /**
-     * Creates new form VistaEmpleado
-     */
+    private  void listar(DefaultTableModel modelo) {
+        ArrayList<Libro> libros = biblioteca.getLibros();
+        for (Libro l : libros) {
+            modelo.addRow(new Object[]{
+                l.getTitulo(),
+                l.getAutor(),
+                l.getEditorial(),
+                l.getIsbn(),
+                l.getAñoPublicacion(),
+                l.getNumeroPaginas(),
+                String.join(", ", l.getGeneros()),
+                l.isDisponible() ? "Sí" : "No"
+            });
+        }
+    }
+
+
     public VistaEmpleado() {
         initComponents();
+        listar((DefaultTableModel) tabla_libros.getModel());
+        tabla_libros.getColumnModel().getColumn(0).setPreferredWidth(200); 
+        tabla_libros.getColumnModel().getColumn(1).setPreferredWidth(150); 
+        tabla_libros.getColumnModel().getColumn(2).setPreferredWidth(120); 
+        tabla_libros.getColumnModel().getColumn(3).setPreferredWidth(100); 
+        tabla_libros.getColumnModel().getColumn(4).setPreferredWidth(50);  
+        tabla_libros.getColumnModel().getColumn(5).setPreferredWidth(70);  
+        tabla_libros.getColumnModel().getColumn(6).setPreferredWidth(150); 
+        tabla_libros.getColumnModel().getColumn(7).setPreferredWidth(80); 
+        tabla_libros.getColumnModel().getColumn(4).setResizable(false);
     }
 
     /**
@@ -225,8 +248,8 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jPanel3.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, 820, 280));
 
         jTabbedPane1.addTab("Préstamos", jPanel3);
-        jTabbedPane1.addTab("tab3", jPanel4);
-        jTabbedPane1.addTab("tab4", jPanel5);
+        jTabbedPane1.addTab("Devoluciones", jPanel4);
+        jTabbedPane1.addTab("Administrar préstamos", jPanel5);
 
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, 860, 640));
 
@@ -244,58 +267,59 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private void btn_buscar_libroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscar_libroActionPerformed
         String criterio = txt_buscar_libro.getText().trim();
         String opcion = cbxOpcion.getSelectedItem().toString();
+        if (criterio != null) {
 
-        ArrayList<Libro> encontrados = new ArrayList<>();
+            ArrayList<Libro> encontrados = new ArrayList<>();
 
-        switch (opcion) {
-            case "Título":
-                encontrados = biblioteca.buscarPorTitulo(criterio);
-                break;
-            case "Autor":
-                encontrados = biblioteca.buscarPorAutor(criterio);
-                break;
-            case "Editorial":
-                encontrados = biblioteca.buscarPorEditorial(criterio);
-                break;
-            case "Año":
-                try {
-                    int anio = Integer.parseInt(criterio);
-                    encontrados = biblioteca.buscarPorAño(anio);
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Ingrese un número válido para el año.");
+            switch (opcion) {
+                case "Título":
+                    encontrados = biblioteca.buscarPorTitulo(criterio);
+                    break;
+                case "Autor":
+                    encontrados = biblioteca.buscarPorAutor(criterio);
+                    break;
+                case "Editorial":
+                    encontrados = biblioteca.buscarPorEditorial(criterio);
+                    break;
+                case "Año":
+                    try {
+                        int anio = Integer.parseInt(criterio);
+                        encontrados = biblioteca.buscarPorAño(anio);
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(this, "Ingrese un número válido para el año.");
+                        return;
+                    }
+                    break;
+                case "ISBN":
+                    encontrados = biblioteca.buscarPorISBN(criterio);
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(this, "Seleccione un criterio de búsqueda.");
                     return;
-                }
-                break;
-            case "ISBN":
-                encontrados = biblioteca.buscarPorISBN(criterio);
-                break;
-            default:
-                JOptionPane.showMessageDialog(this, "Seleccione un criterio de búsqueda.");
-                return;
-        }
+            }
 
-        DefaultTableModel modelo = (DefaultTableModel) tabla_libros.getModel();
-        modelo.setRowCount(0);
+            DefaultTableModel modelo = (DefaultTableModel) tabla_libros.getModel();
+            modelo.setRowCount(0);
 
-        // Agregar resultados
-        for (Libro l : encontrados) {
-            modelo.addRow(new Object[]{
-                l.getTitulo(),
-                l.getAutor(),
-                l.getEditorial(),
-                l.getIsbn(),
-                l.getAñoPublicacion(),
-                l.getNumeroPaginas(),
-                String.join(", ", l.getGeneros()),
-                l.isDisponible() ? "Sí" : "No"
-            });
-        }
+            for (Libro l : encontrados) {
+                modelo.addRow(new Object[]{
+                    l.getTitulo(),
+                    l.getAutor(),
+                    l.getEditorial(),
+                    l.getIsbn(),
+                    l.getAñoPublicacion(),
+                    l.getNumeroPaginas(),
+                    String.join(", ", l.getGeneros()),
+                    l.isDisponible() ? "Sí" : "No"
+                });
+            }
 
-        // Si no hay resultados
-        if (encontrados.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No se encontraron resultados para: " + criterio);
+            if (encontrados.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No se encontraron resultados para: " + criterio);
+            }
+        } else if (criterio == null) {
+            listar((DefaultTableModel) tabla_libros.getModel());
         }
-    
 
 
     }//GEN-LAST:event_btn_buscar_libroActionPerformed
@@ -308,36 +332,36 @@ public class VistaEmpleado extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-    /* Set the Nimbus look and feel */
-    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-     */
-    try {
-        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-            if ("Nimbus".equals(info.getName())) {
-                javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                break;
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
             }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-    } catch (ClassNotFoundException ex) {
-        java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (InstantiationException ex) {
-        java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (IllegalAccessException ex) {
-        java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-        java.util.logging.Logger.getLogger(VistaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-    //</editor-fold>
+        //</editor-fold>
 
-    /* Create and display the form */
-    java.awt.EventQueue.invokeLater(new Runnable() {
-        public void run() {
-            new VistaEmpleado().setVisible(true);
-        }
-    });
-}
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new VistaEmpleado().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Menu;
