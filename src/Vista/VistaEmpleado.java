@@ -248,7 +248,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jPanel3.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, 820, 280));
 
         jTabbedPane1.addTab("Préstamos", jPanel3);
-        jTabbedPane1.addTab("Devoluciones", jPanel4);
+        jTabbedPane1.addTab("devo", jPanel4);
         jTabbedPane1.addTab("Administrar préstamos", jPanel5);
 
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, 860, 640));
