@@ -101,7 +101,32 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        txtDNI = new javax.swing.JTextField();
+        txtNombres = new javax.swing.JTextField();
+        txtApellidos = new javax.swing.JTextField();
+        btnBuscarCliente = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        tablePrestamos = new javax.swing.JTable();
+        btnRegistrarDev = new javax.swing.JButton();
+        btnRegistrarMulta = new javax.swing.JButton();
+        jLabel14 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        txtBuscar = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        btnBuscarPrestamo = new javax.swing.JButton();
+        cmbEstado = new javax.swing.JComboBox<>();
+        jLabel16 = new javax.swing.JLabel();
+        btnGenerarReporte = new javax.swing.JButton();
+        btnEditarPrestamo = new javax.swing.JButton();
+        btnEliminarPrestamo = new javax.swing.JButton();
 
         menu1.setLabel("File");
         menuBar1.add(menu1);
@@ -248,7 +273,140 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jPanel3.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, 820, 280));
 
         jTabbedPane1.addTab("Préstamos", jPanel3);
-        jTabbedPane1.addTab("devo", jPanel4);
+
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabel10.setText("Devoluciones");
+        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
+        jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel11.setText("DNI:");
+        jPanel8.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel12.setText("Apellidos:");
+        jPanel8.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 90, -1, -1));
+
+        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel13.setText("Nombres:");
+        jPanel8.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
+
+        txtDNI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDNIActionPerformed(evt);
+            }
+        });
+        jPanel8.add(txtDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 40, 220, -1));
+
+        txtNombres.setEditable(false);
+        jPanel8.add(txtNombres, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 90, 220, -1));
+
+        txtApellidos.setEditable(false);
+        jPanel8.add(txtApellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 90, 220, -1));
+
+        btnBuscarCliente.setText("Buscar");
+        jPanel8.add(btnBuscarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 40, -1, -1));
+
+        jPanel4.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 820, 140));
+
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Préstamos pendientes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
+        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        tablePrestamos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "id_prestamo", "Título de libro", "Fecha préstamo", "Fecha límite de devolución", "Estado"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane5.setViewportView(tablePrestamos);
+
+        jPanel7.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 580, 270));
+
+        btnRegistrarDev.setBackground(new java.awt.Color(153, 153, 255));
+        btnRegistrarDev.setText("Registrar devolución");
+        jPanel7.add(btnRegistrarDev, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 200, 140, 30));
+
+        btnRegistrarMulta.setBackground(new java.awt.Color(255, 102, 102));
+        btnRegistrarMulta.setText("Registrar multa");
+        btnRegistrarMulta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarMultaActionPerformed(evt);
+            }
+        });
+        jPanel7.add(btnRegistrarMulta, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 270, 140, 30));
+
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/devolucion_libro.png"))); // NOI18N
+        jLabel14.setText("jLabel14");
+        jPanel7.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 20, 160, 150));
+
+        jPanel4.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 820, 320));
+
+        jTabbedPane1.addTab("Devoluciones", jPanel4);
+
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID Préstamo", "Cliente", "Libro", "Fecha de préstamo", "Fecha límite", "Fecha de devolución", "Estado"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane4.setViewportView(jTable1);
+
+        jPanel5.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 640, 480));
+        jPanel5.add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 280, 30));
+
+        jLabel15.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel15.setText("Estado:");
+        jPanel5.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 40, -1, -1));
+
+        btnBuscarPrestamo.setText("Buscar");
+        jPanel5.add(btnBuscarPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 30, 70, 30));
+
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Pendientes", "Devueltos", "Vencidos" }));
+        cmbEstado.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jPanel5.add(cmbEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 30, 80, 30));
+
+        jLabel16.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel16.setText("Buscar:");
+        jPanel5.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
+
+        btnGenerarReporte.setText("Generar reporte");
+        jPanel5.add(btnGenerarReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 530, 130, 40));
+
+        btnEditarPrestamo.setText("Editar préstamo");
+        jPanel5.add(btnEditarPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 90, 130, 40));
+
+        btnEliminarPrestamo.setText("Eliminar préstamo");
+        jPanel5.add(btnEliminarPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(704, 160, -1, 40));
+
         jTabbedPane1.addTab("Administrar préstamos", jPanel5);
 
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, 860, 640));
@@ -256,13 +414,13 @@ public class VistaEmpleado extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txt_buscar_libroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_buscar_libroActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_buscar_libroActionPerformed
-
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void cbxOpcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxOpcionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxOpcionActionPerformed
 
     private void btn_buscar_libroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscar_libroActionPerformed
         String criterio = txt_buscar_libro.getText().trim();
@@ -273,29 +431,29 @@ public class VistaEmpleado extends javax.swing.JFrame {
 
             switch (opcion) {
                 case "Título":
-                    encontrados = biblioteca.buscarPorTitulo(criterio);
-                    break;
+                encontrados = biblioteca.buscarPorTitulo(criterio);
+                break;
                 case "Autor":
-                    encontrados = biblioteca.buscarPorAutor(criterio);
-                    break;
+                encontrados = biblioteca.buscarPorAutor(criterio);
+                break;
                 case "Editorial":
-                    encontrados = biblioteca.buscarPorEditorial(criterio);
-                    break;
+                encontrados = biblioteca.buscarPorEditorial(criterio);
+                break;
                 case "Año":
-                    try {
-                        int anio = Integer.parseInt(criterio);
-                        encontrados = biblioteca.buscarPorAño(anio);
-                    } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(this, "Ingrese un número válido para el año.");
-                        return;
-                    }
-                    break;
-                case "ISBN":
-                    encontrados = biblioteca.buscarPorISBN(criterio);
-                    break;
-                default:
-                    JOptionPane.showMessageDialog(this, "Seleccione un criterio de búsqueda.");
+                try {
+                    int anio = Integer.parseInt(criterio);
+                    encontrados = biblioteca.buscarPorAño(anio);
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Ingrese un número válido para el año.");
                     return;
+                }
+                break;
+                case "ISBN":
+                encontrados = biblioteca.buscarPorISBN(criterio);
+                break;
+                default:
+                JOptionPane.showMessageDialog(this, "Seleccione un criterio de búsqueda.");
+                return;
             }
 
             DefaultTableModel modelo = (DefaultTableModel) tabla_libros.getModel();
@@ -321,12 +479,19 @@ public class VistaEmpleado extends javax.swing.JFrame {
             listar((DefaultTableModel) tabla_libros.getModel());
         }
 
-
     }//GEN-LAST:event_btn_buscar_libroActionPerformed
 
-    private void cbxOpcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxOpcionActionPerformed
+    private void txt_buscar_libroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_buscar_libroActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbxOpcionActionPerformed
+    }//GEN-LAST:event_txt_buscar_libroActionPerformed
+
+    private void txtDNIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDNIActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDNIActionPerformed
+
+    private void btnRegistrarMultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarMultaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRegistrarMultaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -365,14 +530,29 @@ public class VistaEmpleado extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Menu;
+    private javax.swing.JButton btnBuscarCliente;
+    private javax.swing.JButton btnBuscarPrestamo;
+    private javax.swing.JButton btnEditarPrestamo;
+    private javax.swing.JButton btnEliminarPrestamo;
+    private javax.swing.JButton btnGenerarReporte;
+    private javax.swing.JButton btnRegistrarDev;
+    private javax.swing.JButton btnRegistrarMulta;
     private javax.swing.JButton btn_agregar_libro;
     private javax.swing.JButton btn_buscar_libro;
     private javax.swing.JButton btn_eliminar_libro;
     private javax.swing.JButton btn_modificar_libro;
     private javax.swing.JComboBox<String> cbxOpcion;
+    private javax.swing.JComboBox<String> cmbEstado;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -387,11 +567,16 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
@@ -403,7 +588,12 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private java.awt.Menu menu2;
     private java.awt.MenuBar menuBar1;
     private javax.swing.JTable tabla_libros;
+    private javax.swing.JTable tablePrestamos;
     private javax.swing.JTable tblPrestamo;
+    private javax.swing.JTextField txtApellidos;
+    private javax.swing.JTextField txtBuscar;
+    private javax.swing.JTextField txtDNI;
+    private javax.swing.JTextField txtNombres;
     private javax.swing.JTextField txt_buscar_libro;
     // End of variables declaration//GEN-END:variables
 }
