@@ -5,7 +5,10 @@
 package Servicio;
 
 import Modelo.Libro;
+import Modelo.Prestamo;
 import java.util.ArrayList;
+import java.util.Date;
+import java.time.LocalDate;
 
 /**
  *
@@ -34,5 +37,20 @@ public class Main {
         System.out.println("\n📖 Prestando libro...");
         b.prestarLibro("12345");
         b.listarLibros();
+   
+        
+        Prestamos prestamos = new Prestamos();
+
+        prestamos.registrarPrestamo("Juan Pérez", "Cien Años de Soledad");
+        prestamos.registrarPrestamo("Ana López", "El Principito");
+
+        prestamos.listarPrestamos();
+
+        prestamos.devolverPrestamo(1);
+
+        prestamos.listarPrestamos();
+        
+        
+        
     }
 }

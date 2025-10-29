@@ -142,6 +142,8 @@ public class VistaEmpleado extends javax.swing.JFrame {
 
         jSeparator1.setPreferredSize(new java.awt.Dimension(50, 5));
         Menu.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 120, 20));
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/libro.png"))); // NOI18N
         Menu.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 128, 128));
 
         getContentPane().add(Menu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 160, 640));
