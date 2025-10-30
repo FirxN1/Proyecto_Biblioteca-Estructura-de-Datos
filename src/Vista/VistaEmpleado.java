@@ -5,7 +5,9 @@
 package Vista;
 
 import Modelo.Libro;
+import Modelo.Prestamo;
 import Servicio.Biblioteca;
+import Servicio.Prestamos;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -20,6 +22,13 @@ public class VistaEmpleado extends javax.swing.JFrame {
     DefaultTableModel modeloTabla = new DefaultTableModel(
             new Object[]{"Título", "Autor", "Editorial", "ISBN", "Año", "Páginas", "Géneros", "Disponible"}, 0
     );
+    
+    Prestamos gestorPrestamos = Prestamos.getInstancia();
+    DefaultTableModel modeloPrestamos = new DefaultTableModel(
+            new Object[]{"ID", "Cliente", "Libro", "Fecha Préstamo", "Fecha Límite", "Fecha Devolución", "Estado"}, 0
+    );
+    
+    
 
     private  void listar(DefaultTableModel modelo) {
         ArrayList<Libro> libros = biblioteca.getLibros();
@@ -36,6 +45,26 @@ public class VistaEmpleado extends javax.swing.JFrame {
             });
         }
     }
+    
+    private void listarPrestamos(DefaultTableModel modelo) {
+    modelo.setRowCount(0); // limpiar tabla
+    Prestamos gestor = Prestamos.getInstancia();
+
+    for (Prestamo p : gestor.getListaPrestamos()) {
+        modelo.addRow(new Object[]{
+            p.getId(),
+            p.getCliente(),
+            p.getLibro(),
+            p.getFechaPrestamo(),
+            p.getFechaLimite(),
+            p.getFechaDevolucion() != null ? p.getFechaDevolucion() : "-",
+            p.getEstado()
+        });
+    }
+}
+
+    
+    
 
 
     public VistaEmpleado() {
@@ -50,6 +79,13 @@ public class VistaEmpleado extends javax.swing.JFrame {
         tabla_libros.getColumnModel().getColumn(6).setPreferredWidth(150); 
         tabla_libros.getColumnModel().getColumn(7).setPreferredWidth(80); 
         tabla_libros.getColumnModel().getColumn(4).setResizable(false);
+        
+        DefaultTableModel modelo = new DefaultTableModel(
+            new Object[]{"ID", "Cliente", "Libro", "Fecha Préstamo", "Fecha Límite", "Fecha Devolución", "Estado"}, 0
+        );
+        jTablePrestamos.setModel(modelo);
+        listarPrestamos(modelo);
+        
     }
 
     /**
@@ -118,7 +154,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTablePrestamos = new javax.swing.JTable();
         txtBuscar = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         btnBuscarPrestamo = new javax.swing.JButton();
@@ -364,7 +400,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
 
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTablePrestamos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -380,7 +416,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane4.setViewportView(jTable1);
+        jScrollPane4.setViewportView(jTablePrestamos);
 
         jPanel5.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 640, 480));
         jPanel5.add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 280, 30));
@@ -390,9 +426,14 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jPanel5.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 40, -1, -1));
 
         btnBuscarPrestamo.setText("Buscar");
+        btnBuscarPrestamo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarPrestamoActionPerformed(evt);
+            }
+        });
         jPanel5.add(btnBuscarPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 30, 70, 30));
 
-        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Pendientes", "Devueltos", "Vencidos" }));
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Pendiente", "Devueltos", "Vencidos" }));
         cmbEstado.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanel5.add(cmbEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 30, 80, 30));
 
@@ -495,6 +536,91 @@ public class VistaEmpleado extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRegistrarMultaActionPerformed
 
+    private void btnBuscarPrestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPrestamoActionPerformed
+        
+        Prestamos gestor = Prestamos.getInstancia();
+        gestor.actualizarVencidos(); // actualizar automáticamente
+        DefaultTableModel modelo = (DefaultTableModel) jTablePrestamos.getModel();
+        modelo.setRowCount(0);
+
+        String texto = txtBuscar.getText().trim();
+        String estadoSeleccionado = cmbEstado.getSelectedItem().toString();
+
+        if (texto.isEmpty() && estadoSeleccionado.equals("Todos")) {
+        for (Prestamo p : gestor.getPrestamos()) {
+            modelo.addRow(new Object[]{
+                p.getId(),
+                p.getCliente(),
+                p.getLibro(),
+                p.getFechaPrestamo(),
+                p.getFechaLimite(),
+                p.getFechaDevolucion() != null ? p.getFechaDevolucion() : "-",
+                p.getEstado()
+            });
+        }
+        return; // Salir del método
+    }
+        
+        
+        // Buscar por ID (si es número)
+        try {
+            int id = Integer.parseInt(texto);
+            Prestamo p = gestor.buscarPorId(id);
+            if (p != null && (estadoSeleccionado.equals("Todos") || p.getEstado().equalsIgnoreCase(estadoSeleccionado))) {
+                modelo.addRow(new Object[]{
+                    p.getId(),
+                    p.getCliente(),
+                    p.getLibro(),
+                    p.getFechaPrestamo(),
+                    p.getFechaLimite(),
+                    p.getFechaDevolucion() != null ? p.getFechaDevolucion() : "-",
+                    p.getEstado()
+                });
+                return;
+            }
+        } catch (NumberFormatException e) {
+            // No es un número → buscar por cliente o estado
+        }
+
+        ArrayList<Prestamo> resultados = new ArrayList<>();
+
+        // Buscar por cliente si hay texto
+        if (!texto.isEmpty()) {
+            resultados.addAll(gestor.buscarPorCliente(texto));
+        }
+
+        // Si no hay texto, pero hay filtro de estado
+        if (texto.isEmpty() && !estadoSeleccionado.equals("Todos")) {
+            resultados.addAll(gestor.buscarPorEstado(estadoSeleccionado));
+        }
+
+        // Si hay texto y también se filtró por estado
+        if (!texto.isEmpty() && !estadoSeleccionado.equals("Todos")) {
+            resultados.removeIf(p -> !p.getEstado().equalsIgnoreCase(estadoSeleccionado));
+        }
+
+        // Mostrar resultados
+        for (Prestamo p : resultados) {
+            modelo.addRow(new Object[]{
+                p.getId(),
+                p.getCliente(),
+                p.getLibro(),
+                p.getFechaPrestamo(),
+                p.getFechaLimite(),
+                p.getFechaDevolucion() != null ? p.getFechaDevolucion() : "-",
+                p.getEstado()
+            });
+        }
+
+        if (modelo.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "No se encontraron resultados.");
+        }
+
+        
+        
+        
+    }//GEN-LAST:event_btnBuscarPrestamoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -578,7 +704,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTablePrestamos;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;

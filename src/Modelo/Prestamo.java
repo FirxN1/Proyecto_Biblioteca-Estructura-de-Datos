@@ -18,7 +18,7 @@ public class Prestamo {
         this.libro = libro;
         this.fechaPrestamo = fechaPrestamo;
         this.fechaLimite = fechaLimite;
-        this.estado = "Activo";
+        this.estado = "Pendiente";
     }
 
     // Getters
@@ -28,11 +28,22 @@ public class Prestamo {
     public LocalDate getFechaPrestamo() { return fechaPrestamo; }
     public LocalDate getFechaLimite() { return fechaLimite; }
     public LocalDate getFechaDevolucion() { return fechaDevolucion; }
-    public String getEstado() { return estado; }
+    
+    public String getEstado() {
+        if (estado.equals("Pendiente") && LocalDate.now().isAfter(fechaLimite)) {
+            estado = "Vencido";
+        }
+        return estado;
+    }
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
     // Método para devolver libro
     public void devolverLibro() {
         this.fechaDevolucion = LocalDate.now();
         this.estado = "Devuelto";
     }
+    
+    
 }
