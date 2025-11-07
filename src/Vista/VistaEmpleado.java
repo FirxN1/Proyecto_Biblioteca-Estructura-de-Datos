@@ -9,7 +9,9 @@ import Modelo.Prestamo;
 import Servicio.Biblioteca;
 import Servicio.Prestamos;
 import java.util.ArrayList;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,15 +24,13 @@ public class VistaEmpleado extends javax.swing.JFrame {
     DefaultTableModel modeloTabla = new DefaultTableModel(
             new Object[]{"Título", "Autor", "Editorial", "ISBN", "Año", "Páginas", "Géneros", "Disponible"}, 0
     );
-    
+
     Prestamos gestorPrestamos = Prestamos.getInstancia();
     DefaultTableModel modeloPrestamos = new DefaultTableModel(
             new Object[]{"ID", "Cliente", "Libro", "Fecha Préstamo", "Fecha Límite", "Fecha Devolución", "Estado"}, 0
     );
-    
-    
 
-    private  void listar(DefaultTableModel modelo) {
+    private void listar(DefaultTableModel modelo) {
         ArrayList<Libro> libros = biblioteca.getLibros();
         for (Libro l : libros) {
             modelo.addRow(new Object[]{
@@ -45,47 +45,79 @@ public class VistaEmpleado extends javax.swing.JFrame {
             });
         }
     }
-    
+
     private void listarPrestamos(DefaultTableModel modelo) {
-    modelo.setRowCount(0); // limpiar tabla
-    Prestamos gestor = Prestamos.getInstancia();
+        modelo.setRowCount(0); // limpiar tabla
+        Prestamos gestor = Prestamos.getInstancia();
 
-    for (Prestamo p : gestor.getListaPrestamos()) {
-        modelo.addRow(new Object[]{
-            p.getId(),
-            p.getCliente(),
-            p.getLibro(),
-            p.getFechaPrestamo(),
-            p.getFechaLimite(),
-            p.getFechaDevolucion() != null ? p.getFechaDevolucion() : "-",
-            p.getEstado()
-        });
+        for (Prestamo p : gestor.getListaPrestamos()) {
+            modelo.addRow(new Object[]{
+                p.getId(),
+                p.getCliente(),
+                p.getLibro(),
+                p.getFechaPrestamo(),
+                p.getFechaLimite(),
+                p.getFechaDevolucion() != null ? p.getFechaDevolucion() : "-",
+                p.getEstado()
+            });
+        }
     }
-}
-
-    
-    
-
 
     public VistaEmpleado() {
         initComponents();
         listar((DefaultTableModel) tabla_libros.getModel());
-        tabla_libros.getColumnModel().getColumn(0).setPreferredWidth(200); 
-        tabla_libros.getColumnModel().getColumn(1).setPreferredWidth(150); 
-        tabla_libros.getColumnModel().getColumn(2).setPreferredWidth(120); 
-        tabla_libros.getColumnModel().getColumn(3).setPreferredWidth(100); 
-        tabla_libros.getColumnModel().getColumn(4).setPreferredWidth(50);  
-        tabla_libros.getColumnModel().getColumn(5).setPreferredWidth(70);  
-        tabla_libros.getColumnModel().getColumn(6).setPreferredWidth(150); 
-        tabla_libros.getColumnModel().getColumn(7).setPreferredWidth(80); 
+        tabla_libros.getColumnModel().getColumn(0).setPreferredWidth(200);
+        tabla_libros.getColumnModel().getColumn(1).setPreferredWidth(150);
+        tabla_libros.getColumnModel().getColumn(2).setPreferredWidth(120);
+        tabla_libros.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tabla_libros.getColumnModel().getColumn(4).setPreferredWidth(50);
+        tabla_libros.getColumnModel().getColumn(5).setPreferredWidth(70);
+        tabla_libros.getColumnModel().getColumn(6).setPreferredWidth(150);
+        tabla_libros.getColumnModel().getColumn(7).setPreferredWidth(80);
         tabla_libros.getColumnModel().getColumn(4).setResizable(false);
-        
+
         DefaultTableModel modelo = new DefaultTableModel(
-            new Object[]{"ID", "Cliente", "Libro", "Fecha Préstamo", "Fecha Límite", "Fecha Devolución", "Estado"}, 0
+                new Object[]{"ID", "Cliente", "Libro", "Fecha Préstamo", "Fecha Límite", "Fecha Devolución", "Estado"}, 0
         );
         jTablePrestamos.setModel(modelo);
         listarPrestamos(modelo);
-        
+
+        // Establecer layout vertical para que las notificaciones se apilen
+        jPanelNotificaciones.setLayout(new javax.swing.BoxLayout(jPanelNotificaciones, javax.swing.BoxLayout.Y_AXIS));
+
+// Ejemplo de datos (pueden venir de la BD luego)
+        String[] solicitudes = {
+            "Juan Pérez solicita el libro: 'El Quijote'",
+            "María Torres solicita el libro: 'La Odisea'",
+            "Carlos Ruiz solicita el libro: 'Cien años de soledad'",
+            "Ana Díaz solicita el libro: 'El Principito'"
+        };
+
+// Crear y agregar paneles de notificación dinámicamente
+        for (String solicitud : solicitudes) {
+            JPanel card = new JPanel();
+            card.setBorder(javax.swing.BorderFactory.createTitledBorder(
+                    null,
+                    "Solicitud de préstamo",
+                    javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+                    javax.swing.border.TitledBorder.DEFAULT_POSITION,
+                    new java.awt.Font("Segoe UI", 1, 12)
+            ));
+            card.setLayout(new java.awt.BorderLayout());
+
+            JLabel texto = new JLabel(solicitud);
+            texto.setFont(new java.awt.Font("Segoe UI", 0, 14));
+            texto.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+            card.add(texto, java.awt.BorderLayout.CENTER);
+
+            jPanelNotificaciones.add(card);
+        }
+
+// Refrescar la interfaz
+        jPanelNotificaciones.revalidate();
+        jPanelNotificaciones.repaint();
+
     }
 
     /**
@@ -163,6 +195,11 @@ public class VistaEmpleado extends javax.swing.JFrame {
         btnGenerarReporte = new javax.swing.JButton();
         btnEditarPrestamo = new javax.swing.JButton();
         btnEliminarPrestamo = new javax.swing.JButton();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel18 = new javax.swing.JLabel();
+        jPanel10 = new javax.swing.JPanel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jPanelNotificaciones = new javax.swing.JPanel();
 
         menu1.setLabel("File");
         menuBar1.add(menu1);
@@ -174,6 +211,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         Menu.setBackground(new java.awt.Color(255, 102, 102));
+        Menu.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         Menu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jSeparator1.setPreferredSize(new java.awt.Dimension(50, 5));
@@ -235,7 +273,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jLabel2.setText("Préstamos");
         jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -271,7 +309,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
 
         jPanel3.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 820, 190));
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Libros", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
+        jPanel6.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel9.setText("Buscar libro:");
@@ -318,7 +356,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jLabel10.setText("Devoluciones");
         jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
 
-        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
+        jPanel8.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -351,7 +389,8 @@ public class VistaEmpleado extends javax.swing.JFrame {
 
         jPanel4.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 820, 140));
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Préstamos pendientes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
+        jPanel7.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel7.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tablePrestamos.setModel(new javax.swing.table.DefaultTableModel(
@@ -452,6 +491,27 @@ public class VistaEmpleado extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Administrar préstamos", jPanel5);
 
+        jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel18.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabel18.setText("Peticiones");
+        jLabel18.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jPanel9.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+
+        jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jScrollPane6.setToolTipText("");
+        jScrollPane6.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        jPanelNotificaciones.setPreferredSize(new java.awt.Dimension(400, 860));
+        jScrollPane6.setViewportView(jPanelNotificaciones);
+
+        jPanel10.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 860, 540));
+
+        jPanel9.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 860, 540));
+
+        jTabbedPane1.addTab("Peticiones", jPanel9);
+
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, 860, 640));
 
         pack();
@@ -474,29 +534,29 @@ public class VistaEmpleado extends javax.swing.JFrame {
 
             switch (opcion) {
                 case "Título":
-                encontrados = biblioteca.buscarPorTitulo(criterio);
-                break;
+                    encontrados = biblioteca.buscarPorTitulo(criterio);
+                    break;
                 case "Autor":
-                encontrados = biblioteca.buscarPorAutor(criterio);
-                break;
+                    encontrados = biblioteca.buscarPorAutor(criterio);
+                    break;
                 case "Editorial":
-                encontrados = biblioteca.buscarPorEditorial(criterio);
-                break;
+                    encontrados = biblioteca.buscarPorEditorial(criterio);
+                    break;
                 case "Año":
-                try {
-                    int anio = Integer.parseInt(criterio);
-                    encontrados = biblioteca.buscarPorAño(anio);
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Ingrese un número válido para el año.");
-                    return;
-                }
-                break;
+                    try {
+                        int anio = Integer.parseInt(criterio);
+                        encontrados = biblioteca.buscarPorAño(anio);
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(this, "Ingrese un número válido para el año.");
+                        return;
+                    }
+                    break;
                 case "ISBN":
-                encontrados = biblioteca.buscarPorISBN(criterio);
-                break;
+                    encontrados = biblioteca.buscarPorISBN(criterio);
+                    break;
                 default:
-                JOptionPane.showMessageDialog(this, "Seleccione un criterio de búsqueda.");
-                return;
+                    JOptionPane.showMessageDialog(this, "Seleccione un criterio de búsqueda.");
+                    return;
             }
 
             DefaultTableModel modelo = (DefaultTableModel) tabla_libros.getModel();
@@ -537,7 +597,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegistrarMultaActionPerformed
 
     private void btnBuscarPrestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPrestamoActionPerformed
-        
+
         Prestamos gestor = Prestamos.getInstancia();
         gestor.actualizarVencidos(); // actualizar automáticamente
         DefaultTableModel modelo = (DefaultTableModel) jTablePrestamos.getModel();
@@ -547,21 +607,20 @@ public class VistaEmpleado extends javax.swing.JFrame {
         String estadoSeleccionado = cmbEstado.getSelectedItem().toString();
 
         if (texto.isEmpty() && estadoSeleccionado.equals("Todos")) {
-        for (Prestamo p : gestor.getPrestamos()) {
-            modelo.addRow(new Object[]{
-                p.getId(),
-                p.getCliente(),
-                p.getLibro(),
-                p.getFechaPrestamo(),
-                p.getFechaLimite(),
-                p.getFechaDevolucion() != null ? p.getFechaDevolucion() : "-",
-                p.getEstado()
-            });
+            for (Prestamo p : gestor.getPrestamos()) {
+                modelo.addRow(new Object[]{
+                    p.getId(),
+                    p.getCliente(),
+                    p.getLibro(),
+                    p.getFechaPrestamo(),
+                    p.getFechaLimite(),
+                    p.getFechaDevolucion() != null ? p.getFechaDevolucion() : "-",
+                    p.getEstado()
+                });
+            }
+            return; // Salir del método
         }
-        return; // Salir del método
-    }
-        
-        
+
         // Buscar por ID (si es número)
         try {
             int id = Integer.parseInt(texto);
@@ -616,9 +675,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se encontraron resultados.");
         }
 
-        
-        
-        
+
     }//GEN-LAST:event_btnBuscarPrestamoActionPerformed
 
     /**
@@ -681,6 +738,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -690,6 +748,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -697,11 +756,14 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JPanel jPanelNotificaciones;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTablePrestamos;
