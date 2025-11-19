@@ -136,7 +136,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jLabel4 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel2 = new javax.swing.JPanel();
+        jPanelLibros = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabla_libros = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -146,29 +146,29 @@ public class VistaEmpleado extends javax.swing.JFrame {
         btn_eliminar_libro = new javax.swing.JButton();
         btn_modificar_libro = new javax.swing.JButton();
         cbxOpcion = new javax.swing.JComboBox<>();
-        jPanel3 = new javax.swing.JPanel();
+        jPanelPrestamos = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        jTextFieldNombresPrestamo = new javax.swing.JTextField();
+        jTextFieldApellidosPrestamo = new javax.swing.JTextField();
+        jTextFieldDNIPrestamo = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
+        jTextFieldDireccionPrestamo = new javax.swing.JTextField();
+        jTextFieldTelefonoPrestamo = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        jTextFieldBuscarLibro = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblPrestamo = new javax.swing.JTable();
+        tabla_libro = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jlistPrestamo = new javax.swing.JList<>();
-        jButton1 = new javax.swing.JButton();
+        lista_libros = new javax.swing.JList<>();
+        jButtonRealizarPrestamo = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
+        jPanelDevoluciones = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
@@ -184,7 +184,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
         btnRegistrarDev = new javax.swing.JButton();
         btnRegistrarMulta = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
-        jPanel5 = new javax.swing.JPanel();
+        jPanelAdministrarPrestamos = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTablePrestamos = new javax.swing.JTable();
         txtBuscar = new javax.swing.JTextField();
@@ -195,7 +195,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
         btnGenerarReporte = new javax.swing.JButton();
         btnEditarPrestamo = new javax.swing.JButton();
         btnEliminarPrestamo = new javax.swing.JButton();
-        jPanel9 = new javax.swing.JPanel();
+        jPanelPeticiones = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
@@ -222,23 +222,23 @@ public class VistaEmpleado extends javax.swing.JFrame {
 
         getContentPane().add(Menu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 160, 640));
 
-        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanelLibros.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tabla_libros.setModel(modeloTabla);
         jScrollPane1.setViewportView(tabla_libros);
 
-        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 810, 410));
+        jPanelLibros.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 810, 410));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel1.setText("Libros");
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, -1, -1));
+        jPanelLibros.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, -1, -1));
 
         txt_buscar_libro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_buscar_libroActionPerformed(evt);
             }
         });
-        jPanel2.add(txt_buscar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 540, 30));
+        jPanelLibros.add(txt_buscar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 540, 30));
 
         btn_buscar_libro.setText("Buscar");
         btn_buscar_libro.addActionListener(new java.awt.event.ActionListener() {
@@ -246,16 +246,16 @@ public class VistaEmpleado extends javax.swing.JFrame {
                 btn_buscar_libroActionPerformed(evt);
             }
         });
-        jPanel2.add(btn_buscar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 70, 130, 30));
+        jPanelLibros.add(btn_buscar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 70, 130, 30));
 
         btn_agregar_libro.setText("Agregar...");
-        jPanel2.add(btn_agregar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 550, 120, 30));
+        jPanelLibros.add(btn_agregar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 550, 120, 30));
 
         btn_eliminar_libro.setText("Eliminar");
-        jPanel2.add(btn_eliminar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 550, 120, 30));
+        jPanelLibros.add(btn_eliminar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 550, 120, 30));
 
         btn_modificar_libro.setText("Modificar...");
-        jPanel2.add(btn_modificar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 550, 120, 30));
+        jPanelLibros.add(btn_modificar_libro, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 550, 120, 30));
 
         cbxOpcion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Título", "Autor", "Editorial", "Año", "ISBN", " " }));
         cbxOpcion.addActionListener(new java.awt.event.ActionListener() {
@@ -263,15 +263,15 @@ public class VistaEmpleado extends javax.swing.JFrame {
                 cbxOpcionActionPerformed(evt);
             }
         });
-        jPanel2.add(cbxOpcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 70, 120, 30));
+        jPanelLibros.add(cbxOpcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 70, 120, 30));
 
-        jTabbedPane1.addTab("Libros", jPanel2);
+        jTabbedPane1.addTab("Libros", jPanelLibros);
 
-        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanelPrestamos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel2.setText("Préstamos");
-        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
+        jPanelPrestamos.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -288,14 +288,14 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jLabel3.setText("Nombres:");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        jTextFieldNombresPrestamo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                jTextFieldNombresPrestamoActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 40, 220, -1));
-        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 90, 220, -1));
-        jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 140, 220, -1));
+        jPanel1.add(jTextFieldNombresPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 40, 220, -1));
+        jPanel1.add(jTextFieldApellidosPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 90, 220, -1));
+        jPanel1.add(jTextFieldDNIPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 140, 220, -1));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel8.setText("Teléfono:");
@@ -304,19 +304,19 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel7.setText("Dirección:");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 40, -1, -1));
-        jPanel1.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 40, 220, -1));
-        jPanel1.add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 90, 220, -1));
+        jPanel1.add(jTextFieldDireccionPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 40, 220, -1));
+        jPanel1.add(jTextFieldTelefonoPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 90, 220, -1));
 
-        jPanel3.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 820, 190));
+        jPanelPrestamos.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 820, 190));
 
         jPanel6.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel9.setText("Buscar libro:");
         jPanel6.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
-        jPanel6.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, 200, 30));
+        jPanel6.add(jTextFieldBuscarLibro, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, 200, 30));
 
-        tblPrestamo.setModel(new javax.swing.table.DefaultTableModel(
+        tabla_libro.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -327,34 +327,29 @@ public class VistaEmpleado extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(tblPrestamo);
+        jScrollPane2.setViewportView(tabla_libro);
 
         jPanel6.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 400, 190));
 
-        jlistPrestamo.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane3.setViewportView(jlistPrestamo);
+        jScrollPane3.setViewportView(lista_libros);
 
         jPanel6.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 30, 320, 180));
 
-        jButton1.setText("Realizar préstamo");
-        jPanel6.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 230, 170, 30));
+        jButtonRealizarPrestamo.setText("Realizar préstamo");
+        jPanel6.add(jButtonRealizarPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 230, 170, 30));
 
         jButton2.setText("Seleccionar");
         jPanel6.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 30, -1, 30));
 
-        jPanel3.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, 820, 280));
+        jPanelPrestamos.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, 820, 280));
 
-        jTabbedPane1.addTab("Préstamos", jPanel3);
+        jTabbedPane1.addTab("Préstamos", jPanelPrestamos);
 
-        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanelDevoluciones.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel10.setText("Devoluciones");
-        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+        jPanelDevoluciones.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
 
         jPanel8.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -387,7 +382,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
         btnBuscarCliente.setText("Buscar");
         jPanel8.add(btnBuscarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 40, -1, -1));
 
-        jPanel4.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 820, 140));
+        jPanelDevoluciones.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 820, 140));
 
         jPanel7.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel7.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -433,11 +428,11 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jLabel14.setText("jLabel14");
         jPanel7.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 20, 160, 150));
 
-        jPanel4.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 820, 320));
+        jPanelDevoluciones.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 820, 320));
 
-        jTabbedPane1.addTab("Devoluciones", jPanel4);
+        jTabbedPane1.addTab("Devoluciones", jPanelDevoluciones);
 
-        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanelAdministrarPrestamos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTablePrestamos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -457,12 +452,12 @@ public class VistaEmpleado extends javax.swing.JFrame {
         });
         jScrollPane4.setViewportView(jTablePrestamos);
 
-        jPanel5.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 640, 480));
-        jPanel5.add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 280, 30));
+        jPanelAdministrarPrestamos.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 640, 480));
+        jPanelAdministrarPrestamos.add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 280, 30));
 
         jLabel15.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel15.setText("Estado:");
-        jPanel5.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 40, -1, -1));
+        jPanelAdministrarPrestamos.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 40, -1, -1));
 
         btnBuscarPrestamo.setText("Buscar");
         btnBuscarPrestamo.addActionListener(new java.awt.event.ActionListener() {
@@ -470,33 +465,33 @@ public class VistaEmpleado extends javax.swing.JFrame {
                 btnBuscarPrestamoActionPerformed(evt);
             }
         });
-        jPanel5.add(btnBuscarPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 30, 70, 30));
+        jPanelAdministrarPrestamos.add(btnBuscarPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 30, 70, 30));
 
         cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Pendiente", "Devueltos", "Vencidos" }));
         cmbEstado.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jPanel5.add(cmbEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 30, 80, 30));
+        jPanelAdministrarPrestamos.add(cmbEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 30, 80, 30));
 
         jLabel16.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel16.setText("Buscar:");
-        jPanel5.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
+        jPanelAdministrarPrestamos.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
 
         btnGenerarReporte.setText("Generar reporte");
-        jPanel5.add(btnGenerarReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 530, 130, 40));
+        jPanelAdministrarPrestamos.add(btnGenerarReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 530, 130, 40));
 
         btnEditarPrestamo.setText("Editar préstamo");
-        jPanel5.add(btnEditarPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 90, 130, 40));
+        jPanelAdministrarPrestamos.add(btnEditarPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 90, 130, 40));
 
         btnEliminarPrestamo.setText("Eliminar préstamo");
-        jPanel5.add(btnEliminarPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(704, 160, -1, 40));
+        jPanelAdministrarPrestamos.add(btnEliminarPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(704, 160, -1, 40));
 
-        jTabbedPane1.addTab("Administrar préstamos", jPanel5);
+        jTabbedPane1.addTab("Administrar préstamos", jPanelAdministrarPrestamos);
 
-        jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanelPeticiones.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel18.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel18.setText("Peticiones");
         jLabel18.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jPanel9.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+        jPanelPeticiones.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
 
         jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -508,18 +503,18 @@ public class VistaEmpleado extends javax.swing.JFrame {
 
         jPanel10.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 860, 540));
 
-        jPanel9.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 860, 540));
+        jPanelPeticiones.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 860, 540));
 
-        jTabbedPane1.addTab("Peticiones", jPanel9);
+        jTabbedPane1.addTab("Peticiones", jPanelPeticiones);
 
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, 860, 640));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void jTextFieldNombresPrestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNombresPrestamoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_jTextFieldNombresPrestamoActionPerformed
 
     private void cbxOpcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxOpcionActionPerformed
         // TODO add your handling code here:
@@ -728,8 +723,8 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private javax.swing.JButton btn_modificar_libro;
     private javax.swing.JComboBox<String> cbxOpcion;
     private javax.swing.JComboBox<String> cmbEstado;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButtonRealizarPrestamo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -749,15 +744,15 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
+    private javax.swing.JPanel jPanelAdministrarPrestamos;
+    private javax.swing.JPanel jPanelDevoluciones;
+    private javax.swing.JPanel jPanelLibros;
     private javax.swing.JPanel jPanelNotificaciones;
+    private javax.swing.JPanel jPanelPeticiones;
+    private javax.swing.JPanel jPanelPrestamos;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -767,19 +762,19 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTablePrestamos;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JList<String> jlistPrestamo;
+    private javax.swing.JTextField jTextFieldApellidosPrestamo;
+    private javax.swing.JTextField jTextFieldBuscarLibro;
+    private javax.swing.JTextField jTextFieldDNIPrestamo;
+    private javax.swing.JTextField jTextFieldDireccionPrestamo;
+    private javax.swing.JTextField jTextFieldNombresPrestamo;
+    private javax.swing.JTextField jTextFieldTelefonoPrestamo;
+    private javax.swing.JList<String> lista_libros;
     private java.awt.Menu menu1;
     private java.awt.Menu menu2;
     private java.awt.MenuBar menuBar1;
+    private javax.swing.JTable tabla_libro;
     private javax.swing.JTable tabla_libros;
     private javax.swing.JTable tablePrestamos;
-    private javax.swing.JTable tblPrestamo;
     private javax.swing.JTextField txtApellidos;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtDNI;
