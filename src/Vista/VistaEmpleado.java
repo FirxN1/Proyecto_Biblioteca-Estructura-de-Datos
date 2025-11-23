@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package Vista;
 
 import Modelo.Libro;
@@ -13,12 +10,20 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
+import Modelo.Cliente;
+import Servicio.GestorClientes;
+import java.time.LocalDate;
+import javax.swing.DefaultListModel;
 
 /**
  *
  * @author JUAN
  */
 public class VistaEmpleado extends javax.swing.JFrame {
+    
+    private GestorClientes gestorClientes = GestorClientes.getInstancia();
+    private DefaultListModel<String> modeloListaLibros = new DefaultListModel<>();
+    private ArrayList<Libro> librosSeleccionados = new ArrayList<>();
 
     Biblioteca biblioteca = Biblioteca.getInstancia();
     DefaultTableModel modeloTabla = new DefaultTableModel(
@@ -62,9 +67,18 @@ public class VistaEmpleado extends javax.swing.JFrame {
             });
         }
     }
+    
+    // Método auxiliar para actualizar la tabla de libros
+    private void actualizarTablaLibros() {
+        DefaultTableModel modelo = (DefaultTableModel) tabla_libros.getModel();
+        modelo.setRowCount(0); // Limpiar tabla
+        listar(modelo); // Volver a cargar datos
+    }
 
     public VistaEmpleado() {
         initComponents();
+        
+        // Configurar tabla de libros
         listar((DefaultTableModel) tabla_libros.getModel());
         tabla_libros.getColumnModel().getColumn(0).setPreferredWidth(200);
         tabla_libros.getColumnModel().getColumn(1).setPreferredWidth(150);
@@ -76,16 +90,382 @@ public class VistaEmpleado extends javax.swing.JFrame {
         tabla_libros.getColumnModel().getColumn(7).setPreferredWidth(80);
         tabla_libros.getColumnModel().getColumn(4).setResizable(false);
 
+        // Configurar tabla de préstamos
         DefaultTableModel modelo = new DefaultTableModel(
                 new Object[]{"ID", "Cliente", "Libro", "Fecha Préstamo", "Fecha Límite", "Fecha Devolución", "Estado"}, 0
         );
         jTablePrestamos.setModel(modelo);
         listarPrestamos(modelo);
 
+        // ========== CONFIGURAR BOTONES DE LIBROS ==========
+        
+        // Botón Agregar
+        btn_agregar_libro.addActionListener(e -> {
+            AgregarLibro dialogo = new AgregarLibro(this, true);
+            dialogo.setVisible(true);
+            
+            // Si se agregó un libro, actualizar la tabla
+            if (dialogo.isLibroAgregado()) {
+                actualizarTablaLibros();
+            }
+        });
+        
+        // Botón Modificar
+        btn_modificar_libro.addActionListener(e -> {
+            int filaSeleccionada = tabla_libros.getSelectedRow();
+            
+            if (filaSeleccionada == -1) {
+                JOptionPane.showMessageDialog(this,
+                    "Por favor seleccione un libro de la tabla",
+                    "Ningún libro seleccionado",
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            // Obtener el ISBN del libro seleccionado
+            String isbn = tabla_libros.getValueAt(filaSeleccionada, 3).toString();
+            
+            ModificarLibro dialogo = new ModificarLibro(this, true, isbn);
+            dialogo.setVisible(true);
+            
+            // Si se modificó el libro, actualizar la tabla
+            if (dialogo.isLibroModificado()) {
+                actualizarTablaLibros();
+            }
+        });
+        
+        // Botón Eliminar
+        btn_eliminar_libro.addActionListener(e -> {
+            int filaSeleccionada = tabla_libros.getSelectedRow();
+            
+            if (filaSeleccionada == -1) {
+                JOptionPane.showMessageDialog(this,
+                    "Por favor seleccione un libro de la tabla",
+                    "Ningún libro seleccionado",
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            // Obtener datos del libro seleccionado
+            String titulo = tabla_libros.getValueAt(filaSeleccionada, 0).toString();
+            String isbn = tabla_libros.getValueAt(filaSeleccionada, 3).toString();
+            String disponible = tabla_libros.getValueAt(filaSeleccionada, 7).toString();
+            
+            // Verificar si el libro está disponible
+            if (disponible.equals("No")) {
+                int respuesta = JOptionPane.showConfirmDialog(this,
+                    "Este libro NO está disponible (puede estar prestado).\n" +
+                    "¿Está seguro que desea eliminarlo de todas formas?\n\n" +
+                    "Libro: " + titulo,
+                    "Libro no disponible",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+                
+                if (respuesta != JOptionPane.YES_OPTION) {
+                    return;
+                }
+            } else {
+                // Confirmación normal
+                int respuesta = JOptionPane.showConfirmDialog(this,
+                    "¿Está seguro que desea eliminar este libro?\n\n" +
+                    "Libro: " + titulo + "\n" +
+                    "ISBN: " + isbn + "\n\n" +
+                    "Esta acción no se puede deshacer.",
+                    "Confirmar eliminación",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+                
+                if (respuesta != JOptionPane.YES_OPTION) {
+                    return;
+                }
+            }
+            
+            // Eliminar el libro
+            boolean eliminado = biblioteca.eliminarLibro(isbn);
+            
+            if (eliminado) {
+                JOptionPane.showMessageDialog(this,
+                    "Libro eliminado exitosamente",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                actualizarTablaLibros();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "No se pudo eliminar el libro",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        
+        // Configurar modelo de la lista de libros seleccionados
+lista_librosseleccionados.setModel(modeloListaLibros);
+
+// Configurar modelo de la tabla de búsqueda de libros
+DefaultTableModel modeloTablaLibro = new DefaultTableModel(
+    new Object[]{"Título", "Autor", "Editorial", "ISBN", "Año", "Páginas", "Géneros", "Disponible"}, 0
+);
+tabla_libro.setModel(modeloTablaLibro);
+
+// Botón Buscar Libro
+jButtonBuscar.addActionListener(e -> {
+    String criterio = jTextFieldBuscarLibro.getText().trim();
+    
+    if (criterio.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+            "Por favor ingrese un criterio de búsqueda",
+            "Campo vacío",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Buscar por título, autor o ISBN
+    ArrayList<Libro> resultados = new ArrayList<>();
+    resultados.addAll(biblioteca.buscarPorTitulo(criterio));
+    resultados.addAll(biblioteca.buscarPorAutor(criterio));
+    resultados.addAll(biblioteca.buscarPorISBN(criterio));
+    
+    // Eliminar duplicados
+    ArrayList<Libro> resultadosUnicos = new ArrayList<>();
+    for (Libro l : resultados) {
+        boolean existe = false;
+        for (Libro r : resultadosUnicos) {
+            if (r.getIsbn().equals(l.getIsbn())) {
+                existe = true;
+                break;
+            }
+        }
+        if (!existe) {
+            resultadosUnicos.add(l);
+        }
+    }
+    
+    // Mostrar en la tabla
+    DefaultTableModel modeloBusqueda = (DefaultTableModel) tabla_libro.getModel();
+    modeloBusqueda.setRowCount(0);
+    
+    for (Libro l : resultadosUnicos) {
+        modeloBusqueda.addRow(new Object[]{
+            l.getTitulo(),
+            l.getAutor(),
+            l.getEditorial(),
+            l.getIsbn(),
+            l.getAñoPublicacion(),
+            l.getNumeroPaginas(),
+            String.join(", ", l.getGeneros()),
+            l.isDisponible() ? "Sí" : "No"
+        });
+    }
+    
+    if (resultadosUnicos.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+            "No se encontraron libros con ese criterio",
+            "Sin resultados",
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+});
+
+// Botón Seleccionar (agregar a la lista)
+jButtonSeleccionarlibro.addActionListener(e -> {
+    int filaSeleccionada = tabla_libro.getSelectedRow();
+    
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this,
+            "Por favor seleccione un libro de la tabla",
+            "Ningún libro seleccionado",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    String titulo = tabla_libro.getValueAt(filaSeleccionada, 0).toString();
+    String isbn = tabla_libro.getValueAt(filaSeleccionada, 3).toString();
+    String disponible = tabla_libro.getValueAt(filaSeleccionada, 7).toString();
+    
+    // Verificar que el libro esté disponible
+    if (disponible.equals("No")) {
+        JOptionPane.showMessageDialog(this,
+            "Este libro NO está disponible para préstamo",
+            "Libro no disponible",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Verificar que no esté ya en la lista
+    for (Libro l : librosSeleccionados) {
+        if (l.getIsbn().equals(isbn)) {
+            JOptionPane.showMessageDialog(this,
+                "Este libro ya está en la lista de préstamo",
+                "Libro duplicado",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+    }
+    
+    // Buscar el libro completo
+    Libro libroCompleto = null;
+    for (Libro l : biblioteca.getLibros()) {
+        if (l.getIsbn().equals(isbn)) {
+            libroCompleto = l;
+            break;
+        }
+    }
+    
+    if (libroCompleto != null) {
+        librosSeleccionados.add(libroCompleto);
+        modeloListaLibros.addElement(titulo + " (ISBN: " + isbn + ")");
+        
+        JOptionPane.showMessageDialog(this,
+            "Libro agregado a la lista de préstamo",
+            "Éxito",
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+});
+
+// Botón Realizar Préstamo
+jButtonRealizarPrestamo.addActionListener(e -> {
+    // 1. Validar campos del cliente
+    String nombres = jTextFieldNombresPrestamo.getText().trim();
+    String apellidos = jTextFieldApellidosPrestamo.getText().trim();
+    String dni = jTextFieldDNIPrestamo.getText().trim();
+    String direccion = jTextFieldDireccionPrestamo.getText().trim();
+    String telefono = jTextFieldTelefonoPrestamo.getText().trim();
+    
+    if (nombres.isEmpty() || apellidos.isEmpty() || dni.isEmpty() || 
+        direccion.isEmpty() || telefono.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+            "Por favor complete todos los datos del cliente",
+            "Datos incompletos",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // 2. Validar formato DNI
+    if (!GestorClientes.validarDNI(dni)) {
+        JOptionPane.showMessageDialog(this,
+            "El DNI debe tener exactamente 8 dígitos numéricos",
+            "DNI inválido",
+            JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    // 3. Validar formato teléfono
+    if (!GestorClientes.validarTelefono(telefono)) {
+        JOptionPane.showMessageDialog(this,
+            "El teléfono debe tener exactamente 9 dígitos numéricos",
+            "Teléfono inválido",
+            JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    // 4. Validar que haya al menos un libro seleccionado
+    if (librosSeleccionados.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+            "Por favor seleccione al menos un libro para prestar",
+            "Sin libros seleccionados",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    String nombreCompleto = nombres + " " + apellidos;
+    
+    // 5. Verificar si el cliente tiene préstamos pendientes
+    if (gestorPrestamos.tienePrestamosPendientes(nombreCompleto)) {
+        ArrayList<Prestamo> pendientes = gestorPrestamos.getPrestamosPendientes(nombreCompleto);
+        
+        StringBuilder mensaje = new StringBuilder();
+        mensaje.append("El cliente ").append(nombreCompleto)
+               .append(" tiene ").append(pendientes.size())
+               .append(" préstamo(s) activo(s):\n\n");
+        
+        for (Prestamo p : pendientes) {
+            mensaje.append("- ").append(p.getLibro())
+                   .append(" (Estado: ").append(p.getEstado()).append(")\n");
+        }
+        
+        mensaje.append("\n¿Desea continuar con el nuevo préstamo?");
+        
+        int respuesta = JOptionPane.showConfirmDialog(this,
+            mensaje.toString(),
+            "Cliente con préstamos activos",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE);
+        
+        if (respuesta != JOptionPane.YES_OPTION) {
+            return;
+        }
+    }
+    
+    // 6. Registrar o actualizar cliente
+    Cliente cliente = gestorClientes.buscarPorDni(dni);
+    if (cliente == null) {
+        // Cliente nuevo
+        cliente = new Cliente(nombres, apellidos, dni, direccion, telefono);
+        gestorClientes.registrarCliente(cliente);
+    } else {
+        // Cliente existente - actualizar datos
+        cliente.setNombres(nombres);
+        cliente.setApellidos(apellidos);
+        cliente.setDireccion(direccion);
+        cliente.setTelefono(telefono);
+        gestorClientes.actualizarCliente(dni, cliente);
+    }
+    
+    // 7. Registrar préstamos y cambiar disponibilidad de libros
+    int prestamosRealizados = 0;
+    StringBuilder resumen = new StringBuilder();
+    resumen.append("Préstamos realizados exitosamente:\n\n");
+    
+    for (Libro libro : librosSeleccionados) {
+        if (biblioteca.prestarLibro(libro.getIsbn())) {
+            gestorPrestamos.registrarPrestamo(nombreCompleto, libro.getTitulo());
+            resumen.append("✓ ").append(libro.getTitulo()).append("\n");
+            prestamosRealizados++;
+        }
+    }
+    
+    if (prestamosRealizados > 0) {
+        resumen.append("\nTotal: ").append(prestamosRealizados).append(" libro(s)");
+        resumen.append("\nFecha de devolución: ").append(LocalDate.now().plusDays(15));
+        
+        JOptionPane.showMessageDialog(this,
+            resumen.toString(),
+            "Préstamos registrados",
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        // 8. Limpiar campos y listas
+        jTextFieldNombresPrestamo.setText("");
+        jTextFieldApellidosPrestamo.setText("");
+        jTextFieldDNIPrestamo.setText("");
+        jTextFieldDireccionPrestamo.setText("");
+        jTextFieldTelefonoPrestamo.setText("");
+        jTextFieldBuscarLibro.setText("");
+        
+        modeloListaLibros.clear();
+        librosSeleccionados.clear();
+        
+        DefaultTableModel modeloTablaBusqueda = (DefaultTableModel) tabla_libro.getModel();
+        modeloTablaBusqueda.setRowCount(0);
+        
+        // Actualizar tabla principal de libros
+        actualizarTablaLibros();
+        
+        // Actualizar tabla de préstamos
+        listarPrestamos((DefaultTableModel) jTablePrestamos.getModel());
+    } else {
+        JOptionPane.showMessageDialog(this,
+            "No se pudo realizar ningún préstamo",
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+    }
+});
+        
+        
+        
+
         // Establecer layout vertical para que las notificaciones se apilen
         jPanelNotificaciones.setLayout(new javax.swing.BoxLayout(jPanelNotificaciones, javax.swing.BoxLayout.Y_AXIS));
 
-// Ejemplo de datos (pueden venir de la BD luego)
+        // Ejemplo de datos (pueden venir de la BD luego)
         String[] solicitudes = {
             "Juan Pérez solicita el libro: 'El Quijote'",
             "María Torres solicita el libro: 'La Odisea'",
@@ -93,7 +473,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
             "Ana Díaz solicita el libro: 'El Principito'"
         };
 
-// Crear y agregar paneles de notificación dinámicamente
+        // Crear y agregar paneles de notificación dinámicamente
         for (String solicitud : solicitudes) {
             JPanel card = new JPanel();
             card.setBorder(javax.swing.BorderFactory.createTitledBorder(
@@ -114,11 +494,13 @@ public class VistaEmpleado extends javax.swing.JFrame {
             jPanelNotificaciones.add(card);
         }
 
-// Refrescar la interfaz
+        // Refrescar la interfaz
         jPanelNotificaciones.revalidate();
         jPanelNotificaciones.repaint();
-
     }
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -160,14 +542,15 @@ public class VistaEmpleado extends javax.swing.JFrame {
         jTextFieldDireccionPrestamo = new javax.swing.JTextField();
         jTextFieldTelefonoPrestamo = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        lista_librosseleccionados = new javax.swing.JList<>();
+        jButtonRealizarPrestamo = new javax.swing.JButton();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        tabla_libro = new javax.swing.JTable();
+        jButtonSeleccionarlibro = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jTextFieldBuscarLibro = new javax.swing.JTextField();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tabla_libro = new javax.swing.JTable();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        lista_libros = new javax.swing.JList<>();
-        jButtonRealizarPrestamo = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jButtonBuscar = new javax.swing.JButton();
         jPanelDevoluciones = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
@@ -278,70 +661,68 @@ public class VistaEmpleado extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel6.setText("DNI:");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setText("Apellidos:");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("Nombres:");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
 
         jTextFieldNombresPrestamo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldNombresPrestamoActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextFieldNombresPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 40, 220, -1));
-        jPanel1.add(jTextFieldApellidosPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 90, 220, -1));
-        jPanel1.add(jTextFieldDNIPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 140, 220, -1));
+        jPanel1.add(jTextFieldNombresPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 20, 220, -1));
+        jPanel1.add(jTextFieldApellidosPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 70, 220, -1));
+        jPanel1.add(jTextFieldDNIPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 120, 220, -1));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel8.setText("Teléfono:");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 90, -1, -1));
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 70, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel7.setText("Dirección:");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 40, -1, -1));
-        jPanel1.add(jTextFieldDireccionPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 40, 220, -1));
-        jPanel1.add(jTextFieldTelefonoPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 90, 220, -1));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 20, -1, -1));
+        jPanel1.add(jTextFieldDireccionPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 20, 220, -1));
+        jPanel1.add(jTextFieldTelefonoPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 70, 220, -1));
 
-        jPanelPrestamos.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 820, 190));
+        jPanelPrestamos.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 820, 160));
 
         jPanel6.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel9.setText("Buscar libro:");
-        jPanel6.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
-        jPanel6.add(jTextFieldBuscarLibro, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, 200, 30));
-
-        tabla_libro.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane2.setViewportView(tabla_libro);
-
-        jPanel6.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 400, 190));
-
-        jScrollPane3.setViewportView(lista_libros);
+        jScrollPane3.setViewportView(lista_librosseleccionados);
 
         jPanel6.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 30, 320, 180));
 
         jButtonRealizarPrestamo.setText("Realizar préstamo");
         jPanel6.add(jButtonRealizarPrestamo, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 230, 170, 30));
 
-        jButton2.setText("Seleccionar");
-        jPanel6.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 30, -1, 30));
+        tabla_libro.setModel(modeloTabla);
+        jScrollPane7.setViewportView(tabla_libro);
+
+        jPanel6.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 400, 200));
+
+        jButtonSeleccionarlibro.setText("Seleccionar");
+        jPanel6.add(jButtonSeleccionarlibro, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 240, -1, 30));
 
         jPanelPrestamos.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, 820, 280));
+
+        jLabel9.setText("Buscar libro:");
+        jPanelPrestamos.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 290, -1, -1));
+        jPanelPrestamos.add(jTextFieldBuscarLibro, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 280, 190, 30));
+
+        jButtonBuscar.setText("Buscar");
+        jButtonBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBuscarActionPerformed(evt);
+            }
+        });
+        jPanelPrestamos.add(jButtonBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 280, 90, 30));
 
         jTabbedPane1.addTab("Préstamos", jPanelPrestamos);
 
@@ -673,6 +1054,10 @@ public class VistaEmpleado extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnBuscarPrestamoActionPerformed
 
+    private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonBuscarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -723,8 +1108,9 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private javax.swing.JButton btn_modificar_libro;
     private javax.swing.JComboBox<String> cbxOpcion;
     private javax.swing.JComboBox<String> cmbEstado;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonRealizarPrestamo;
+    private javax.swing.JButton jButtonSeleccionarlibro;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -754,11 +1140,11 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelPeticiones;
     private javax.swing.JPanel jPanelPrestamos;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTablePrestamos;
@@ -768,7 +1154,7 @@ public class VistaEmpleado extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldDireccionPrestamo;
     private javax.swing.JTextField jTextFieldNombresPrestamo;
     private javax.swing.JTextField jTextFieldTelefonoPrestamo;
-    private javax.swing.JList<String> lista_libros;
+    private javax.swing.JList<String> lista_librosseleccionados;
     private java.awt.Menu menu1;
     private java.awt.Menu menu2;
     private java.awt.MenuBar menuBar1;

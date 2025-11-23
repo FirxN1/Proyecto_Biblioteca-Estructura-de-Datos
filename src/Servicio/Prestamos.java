@@ -27,7 +27,6 @@ public class Prestamos {
         }
         return instancia;
     }
-    
 
     // -------------------- REGISTRAR --------------------
     public void registrarPrestamo(String cliente, String libro) {
@@ -41,8 +40,8 @@ public class Prestamos {
         // Índice por cliente
         mapaPorCliente.computeIfAbsent(cliente.toLowerCase(), k -> new ArrayList<>()).add(nuevo);
 
-        // Índice por estado (Activo)
-        mapaPorEstado.computeIfAbsent("Activo".toLowerCase(), k -> new ArrayList<>()).add(nuevo);
+        // Índice por estado (Pendiente)
+        mapaPorEstado.computeIfAbsent("pendiente", k -> new ArrayList<>()).add(nuevo);
 
         System.out.println("✅ Préstamo registrado con ID: " + nuevo.getId());
     }
@@ -50,12 +49,12 @@ public class Prestamos {
     // -------------------- DEVOLVER --------------------
     public void devolverPrestamo(int id) {
         Prestamo p = mapaPorId.get(id);
-        if (p != null && p.getEstado().equals("Activo")) {
+        if (p != null && p.getEstado().equals("Pendiente")) {
             // Cambiar estado del préstamo
             p.devolverLibro();
 
             // Actualizar índices de estado
-            mapaPorEstado.get("activo").remove(p);
+            mapaPorEstado.get("pendiente").remove(p);
             mapaPorEstado.computeIfAbsent("devuelto", k -> new ArrayList<>()).add(p);
 
             System.out.println("📗 Libro devuelto correctamente (ID " + id + ")");
@@ -67,15 +66,51 @@ public class Prestamos {
     // -------------------- VERIFICAR VENCIDOS --------------------
     public void actualizarVencidos() {
         LocalDate hoy = LocalDate.now();
-        ArrayList<Prestamo> activos = mapaPorEstado.getOrDefault("activo", new ArrayList<>());
+        ArrayList<Prestamo> pendientes = mapaPorEstado.getOrDefault("pendiente", new ArrayList<>());
 
-        for (Prestamo p : new ArrayList<>(activos)) {
-            if (p.getFechaLimite().isBefore(hoy) && p.getEstado().equals("Activo")) {
+        for (Prestamo p : new ArrayList<>(pendientes)) {
+            if (p.getFechaLimite().isBefore(hoy) && p.getEstado().equals("Pendiente")) {
                 p.setEstado("Vencido");
-                mapaPorEstado.get("activo").remove(p);
+                mapaPorEstado.get("pendiente").remove(p);
                 mapaPorEstado.computeIfAbsent("vencido", k -> new ArrayList<>()).add(p);
             }
         }
+    }
+
+    // -------------------- VERIFICAR PRÉSTAMOS ACTIVOS --------------------
+    public boolean tienePrestamosPendientes(String nombreCliente) {
+        ArrayList<Prestamo> prestamosCliente = mapaPorCliente.get(nombreCliente.toLowerCase());
+        
+        if (prestamosCliente == null || prestamosCliente.isEmpty()) {
+            return false;
+        }
+        
+        // Verificar si tiene préstamos en estado Pendiente o Vencido
+        for (Prestamo p : prestamosCliente) {
+            String estado = p.getEstado();
+            if (estado.equals("Pendiente") || estado.equals("Vencido")) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    // Obtener préstamos pendientes de un cliente
+    public ArrayList<Prestamo> getPrestamosPendientes(String nombreCliente) {
+        ArrayList<Prestamo> pendientes = new ArrayList<>();
+        ArrayList<Prestamo> prestamosCliente = mapaPorCliente.get(nombreCliente.toLowerCase());
+        
+        if (prestamosCliente != null) {
+            for (Prestamo p : prestamosCliente) {
+                String estado = p.getEstado();
+                if (estado.equals("Pendiente") || estado.equals("Vencido")) {
+                    pendientes.add(p);
+                }
+            }
+        }
+        
+        return pendientes;
     }
 
     // -------------------- LISTAR --------------------
@@ -97,6 +132,6 @@ public class Prestamos {
     }
     
     public ArrayList<Prestamo> getPrestamos() {
-    return listaPrestamos;
-}
+        return listaPrestamos;
+    }
 }

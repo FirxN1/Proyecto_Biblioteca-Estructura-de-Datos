@@ -1,21 +1,212 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
-package Vista;
 
+package Vista;
+import Modelo.Libro;
+import Servicio.Biblioteca;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 /**
  *
  * @author chris
  */
 public class ModificarLibro extends javax.swing.JDialog {
 
-    /**
-     * Creates new form ModificarLibro
-     */
-    public ModificarLibro(java.awt.Frame parent, boolean modal) {
+    private Biblioteca biblioteca;
+    private String isbnOriginal;
+    private boolean libroModificado = false;
+
+    public ModificarLibro(java.awt.Frame parent, boolean modal, String isbn) {
         super(parent, modal);
         initComponents();
+        biblioteca = Biblioteca.getInstancia();
+        this.isbnOriginal = isbn;
+        
+        // Configurar eventos
+        jButtonModificar.addActionListener(e -> modificarLibro());
+        jButtonCancelar.addActionListener(e -> cancelar());
+        
+        // Centrar el diálogo
+        setLocationRelativeTo(parent);
+        
+        // Cargar datos del libro
+        cargarDatosLibro();
+    }
+
+    private void cargarDatosLibro() {
+        for (Libro l : biblioteca.getLibros()) {
+            if (l.getIsbn().equalsIgnoreCase(isbnOriginal)) {
+                jTextFieldTituloModificarLibro.setText(l.getTitulo());
+                jTextFieldAutorModificarLibro.setText(l.getAutor());
+                jTextFieldEditorialModificarLibro.setText(l.getEditorial());
+                jTextFieldISBNModificarLibro.setText(l.getIsbn());
+                jTextFieldAñoPublicacionModificarLibro.setText(String.valueOf(l.getAñoPublicacion()));
+                jTextFieldNumeroPaginasModificarLibro.setText(String.valueOf(l.getNumeroPaginas()));
+                jTextFieldGeneroModificarLibro.setText(String.join(", ", l.getGeneros()));
+                jTextFieldDisponibleMdificarLibro.setText(l.isDisponible() ? "Sí" : "No");
+                break;
+            }
+        }
+    }
+
+    private void modificarLibro() {
+        try {
+            // Obtener valores de los campos
+            String titulo = jTextFieldTituloModificarLibro.getText().trim();
+            String autor = jTextFieldAutorModificarLibro.getText().trim();
+            String editorial = jTextFieldEditorialModificarLibro.getText().trim();
+            String isbn = jTextFieldISBNModificarLibro.getText().trim();
+            String anioStr = jTextFieldAñoPublicacionModificarLibro.getText().trim();
+            String paginasStr = jTextFieldNumeroPaginasModificarLibro.getText().trim();
+            String generoStr = jTextFieldGeneroModificarLibro.getText().trim();
+            String disponibleStr = jTextFieldDisponibleMdificarLibro.getText().trim();
+
+            // Validaciones
+            if (titulo.isEmpty() || autor.isEmpty() || editorial.isEmpty() || isbn.isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "Por favor complete todos los campos obligatorios:\nTítulo, Autor, Editorial e ISBN", 
+                    "Campos incompletos", 
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Si cambió el ISBN, verificar que no exista
+            if (!isbn.equalsIgnoreCase(isbnOriginal)) {
+                for (Libro l : biblioteca.getLibros()) {
+                    if (l.getIsbn().equalsIgnoreCase(isbn)) {
+                        JOptionPane.showMessageDialog(this, 
+                            "Ya existe un libro con ese ISBN", 
+                            "ISBN duplicado", 
+                            JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+            }
+
+            // Parsear año
+            int anio = 0;
+            if (!anioStr.isEmpty()) {
+                try {
+                    anio = Integer.parseInt(anioStr);
+                    if (anio < 1000 || anio > 2025) {
+                        JOptionPane.showMessageDialog(this, 
+                            "El año debe estar entre 1000 y 2025", 
+                            "Año inválido", 
+                            JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, 
+                        "El año debe ser un número válido", 
+                        "Error en año", 
+                        JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+
+            // Parsear páginas
+            int paginas = 0;
+            if (!paginasStr.isEmpty()) {
+                try {
+                    paginas = Integer.parseInt(paginasStr);
+                    if (paginas <= 0) {
+                        JOptionPane.showMessageDialog(this, 
+                            "El número de páginas debe ser mayor a 0", 
+                            "Páginas inválidas", 
+                            JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, 
+                        "El número de páginas debe ser un número válido", 
+                        "Error en páginas", 
+                        JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+
+            // Procesar géneros
+            ArrayList<String> generos = new ArrayList<>();
+            if (!generoStr.isEmpty()) {
+                String[] generosArray = generoStr.split(",");
+                for (String g : generosArray) {
+                    String generoLimpio = g.trim();
+                    if (!generoLimpio.isEmpty()) {
+                        generos.add(generoLimpio);
+                    }
+                }
+            }
+            if (generos.isEmpty()) {
+                generos.add("General");
+            }
+
+            // Procesar disponibilidad
+            boolean disponible = true;
+            if (!disponibleStr.isEmpty()) {
+                disponibleStr = disponibleStr.toLowerCase();
+                if (disponibleStr.equals("no") || disponibleStr.equals("false") || 
+                    disponibleStr.equals("0") || disponibleStr.equals("n")) {
+                    disponible = false;
+                } else if (!disponibleStr.equals("si") && !disponibleStr.equals("sí") && 
+                           !disponibleStr.equals("yes") && !disponibleStr.equals("true") && 
+                           !disponibleStr.equals("1") && !disponibleStr.equals("s")) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Disponibilidad debe ser: Sí/Si/S/1 o No/N/0", 
+                        "Disponibilidad inválida", 
+                        JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            }
+
+            // Modificar el libro
+            boolean exito = biblioteca.editarLibro(isbnOriginal, titulo, autor, editorial, 
+                                                   anio, paginas, generos, disponible);
+            
+            if (exito) {
+                // Si cambió el ISBN, actualizar el original
+                if (!isbn.equalsIgnoreCase(isbnOriginal)) {
+                    for (Libro l : biblioteca.getLibros()) {
+                        if (l.getTitulo().equals(titulo) && l.getAutor().equals(autor)) {
+                            l.setIsbn(isbn);
+                            break;
+                        }
+                    }
+                }
+                
+                libroModificado = true;
+                JOptionPane.showMessageDialog(this, 
+                    "Libro modificado exitosamente", 
+                    "Éxito", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, 
+                    "No se pudo modificar el libro", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error al modificar el libro: " + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    private void cancelar() {
+        int respuesta = JOptionPane.showConfirmDialog(this, 
+            "¿Está seguro que desea cancelar?\nLos cambios no se guardarán.", 
+            "Confirmar cancelación", 
+            JOptionPane.YES_NO_OPTION);
+        
+        if (respuesta == JOptionPane.YES_OPTION) {
+            dispose();
+        }
+    }
+
+    public boolean isLibroModificado() {
+        return libroModificado;
     }
 
     /**
@@ -116,44 +307,6 @@ public class ModificarLibro extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ModificarLibro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ModificarLibro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ModificarLibro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ModificarLibro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ModificarLibro dialog = new ModificarLibro(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancelar;
