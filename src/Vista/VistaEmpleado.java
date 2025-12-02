@@ -2,7 +2,6 @@
 package Vista;
 
 import Modelo.Libro;
-import Modelo.Prestamo;
 import Servicio.Biblioteca;
 import Servicio.Prestamos;
 import java.util.ArrayList;
@@ -10,10 +9,15 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
-import Modelo.Cliente;
 import Servicio.GestorClientes;
 import java.time.LocalDate;
 import javax.swing.DefaultListModel;
+import Modelo.Cliente;
+import Modelo.Prestamo;
+import Modelo.Multa;
+import Servicio.GestorMultas;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -196,7 +200,10 @@ public class VistaEmpleado extends javax.swing.JFrame {
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
             }
-        });
+        }
+        
+        );
+        
         
         // Configurar modelo de la lista de libros seleccionados
 lista_librosseleccionados.setModel(modeloListaLibros);
@@ -460,6 +467,227 @@ jButtonRealizarPrestamo.addActionListener(e -> {
 });
         
         
+
+
+
+
+
+
+// Botón Buscar Cliente (en devoluciones)
+btnBuscarCliente.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent    e) {
+                String dni = txtDNI.getText().trim();
+                // Validar que el campo no esté vacío
+                if (dni.isEmpty()) {
+                    JOptionPane.showMessageDialog(VistaEmpleado.this, "Por favor ingrese un DNI", "Campo vacío", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                // Validar formato DNI
+                if (!GestorClientes.validarDNI(dni)) {
+                    JOptionPane.showMessageDialog(VistaEmpleado.this, "El DNI debe tener exactamente 8 dígitos numéricos", "DNI inválido", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                // Buscar cliente
+                Cliente cliente = gestorClientes.buscarPorDni(dni);
+                if (cliente == null) {
+                    JOptionPane.showMessageDialog(VistaEmpleado.this, "No se encontró ningún cliente con el DNI: " + dni, "Cliente no encontrado", JOptionPane.WARNING_MESSAGE);
+                    // Limpiar campos
+                    txtNombres.setText("");
+                    txtApellidos.setText("");
+                    // Limpiar tabla
+                    DefaultTableModel modelo = (DefaultTableModel) tablePrestamos.getModel();
+                    modelo.setRowCount(0);
+                    return;
+                }
+                // Cargar datos del cliente
+                txtNombres.setText(cliente.getNombres());
+                txtApellidos.setText(cliente.getApellidos());
+                // Buscar préstamos del cliente
+                String nombreCompleto = cliente.getNombreCompleto();
+                ArrayList<Prestamo> prestamosCliente = gestorPrestamos.buscarPorCliente(nombreCompleto);
+                // Filtrar solo préstamos activos (Pendiente o Vencido)
+                ArrayList<Prestamo> prestamosActivos = new ArrayList<>();
+                for (Prestamo p : prestamosCliente) {
+                    String estado = p.getEstado();
+                    if (estado.equals("Pendiente") || estado.equals("Vencido")) {
+                        prestamosActivos.add(p);
+                    }
+                }           // Cargar préstamos en la tabla
+                DefaultTableModel modelo = (DefaultTableModel) tablePrestamos.getModel();
+                modelo.setRowCount(0);
+                for (Prestamo p : prestamosActivos) {
+                    modelo.addRow(new Object[]{
+                        p.getId(),
+                        p.getLibro(),
+                        p.getFechaPrestamo(),
+                        p.getFechaLimite(),
+                        p.getEstado()
+                    });
+                }           if (prestamosActivos.isEmpty()) {
+                    JOptionPane.showMessageDialog(VistaEmpleado.this, "El cliente " + nombreCompleto + " no tiene préstamos activos", "Sin préstamos activos", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(VistaEmpleado.this, "Se encontraron " + prestamosActivos.size() + " préstamo(s) activo(s)", "Préstamos encontrados", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+
+// Botón Registrar Devolución
+btnRegistrarDev.addActionListener(e -> {
+    // Validar que haya un cliente cargado
+    String dni = txtDNI.getText().trim();
+    String nombres = txtNombres.getText().trim();
+    String apellidos = txtApellidos.getText().trim();
+    
+    if (dni.isEmpty() || nombres.isEmpty() || apellidos.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+            "Por favor busque un cliente primero",
+            "Sin cliente seleccionado",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Validar que haya una fila seleccionada en la tabla
+    int filaSeleccionada = tablePrestamos.getSelectedRow();
+    
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this,
+            "Por favor seleccione un préstamo de la tabla",
+            "Sin préstamo seleccionado",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Obtener datos del préstamo seleccionado
+    int idPrestamo = (int) tablePrestamos.getValueAt(filaSeleccionada, 0);
+    String tituloLibro = tablePrestamos.getValueAt(filaSeleccionada, 1).toString();
+    String estado = tablePrestamos.getValueAt(filaSeleccionada, 4).toString();
+    
+    // Buscar el préstamo completo
+    Prestamo prestamo = gestorPrestamos.buscarPorId(idPrestamo);
+    
+    if (prestamo == null) {
+        JOptionPane.showMessageDialog(this,
+            "Error: No se encontró el préstamo",
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    // Verificar que el préstamo no esté ya devuelto
+    if (prestamo.getEstado().equals("Devuelto")) {
+        JOptionPane.showMessageDialog(this,
+            "Este préstamo ya fue devuelto anteriormente",
+            "Préstamo ya devuelto",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Confirmar la devolución
+    int respuesta = JOptionPane.showConfirmDialog(this,
+        "¿Confirmar devolución del libro?\n\n" +
+        "Libro: " + tituloLibro + "\n" +
+        "Cliente: " + nombres + " " + apellidos + "\n" +
+        "Estado actual: " + estado,
+        "Confirmar devolución",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.QUESTION_MESSAGE);
+    
+    if (respuesta == JOptionPane.YES_OPTION) {
+        // Registrar la devolución
+        gestorPrestamos.devolverPrestamo(idPrestamo);
+        
+        // Devolver el libro a la biblioteca
+        biblioteca.devolverLibro(biblioteca.getLibros().stream()
+            .filter(l -> l.getTitulo().equals(tituloLibro))
+            .findFirst()
+            .map(Modelo.Libro::getIsbn)
+            .orElse(""));
+        
+        JOptionPane.showMessageDialog(this,
+            "Devolución registrada exitosamente\n" +
+            "El libro ya está disponible en el sistema",
+            "Devolución exitosa",
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        // Actualizar la tabla de préstamos del cliente
+        btnBuscarCliente.doClick();
+        
+        // Actualizar tabla de libros
+        actualizarTablaLibros();
+        
+        // Actualizar tabla de administrar préstamos
+        listarPrestamos((DefaultTableModel) jTablePrestamos.getModel());
+    }
+});
+
+// Botón Registrar Multa
+btnRegistrarMulta.addActionListener(e -> {
+    // Validar que haya un cliente cargado
+    String dni = txtDNI.getText().trim();
+    String nombres = txtNombres.getText().trim();
+    String apellidos = txtApellidos.getText().trim();
+    
+    if (dni.isEmpty() || nombres.isEmpty() || apellidos.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+            "Por favor busque un cliente primero",
+            "Sin cliente seleccionado",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Validar que haya una fila seleccionada en la tabla
+    int filaSeleccionada = tablePrestamos.getSelectedRow();
+    
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this,
+            "Por favor seleccione un préstamo de la tabla",
+            "Sin préstamo seleccionado",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Obtener datos del préstamo seleccionado
+    int idPrestamo = (int) tablePrestamos.getValueAt(filaSeleccionada, 0);
+    
+    // Buscar el préstamo completo
+    Prestamo prestamo = gestorPrestamos.buscarPorId(idPrestamo);
+    
+    if (prestamo == null) {
+        JOptionPane.showMessageDialog(this,
+            "Error: No se encontró el préstamo",
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    // Verificar que el préstamo no esté ya devuelto
+    if (prestamo.getEstado().equals("Devuelto")) {
+        JOptionPane.showMessageDialog(this,
+            "No se puede multar un préstamo ya devuelto",
+            "Préstamo devuelto",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Abrir diálogo de registro de multa
+    String nombreCompleto = nombres + " " + apellidos;
+    RegistrarMulta dialogo = new RegistrarMulta(this, prestamo, dni, nombreCompleto);
+    dialogo.setVisible(true);
+    
+    // Si se registró la multa, mostrar confirmación
+    if (dialogo.isMultaRegistrada()) {
+        Modelo.Multa multa = dialogo.getMultaCreada();
+        
+        JOptionPane.showMessageDialog(this,
+            "Multa registrada exitosamente\n\n" +
+            "ID Multa: " + multa.getId() + "\n" +
+            "Monto: S/. " + String.format("%.2f", multa.getMonto()) + "\n" +
+            "Motivo: " + multa.getMotivo(),
+            "Multa registrada",
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+});
         
 
         // Establecer layout vertical para que las notificaciones se apilen
