@@ -33,7 +33,7 @@ public class RegistrarMulta extends JDialog {
 
     private void initComponents() {
         setLayout(null);
-        setSize(500, 350);
+        setSize(500, 400);
         setResizable(false);
 
         // Título
